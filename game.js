@@ -127,6 +127,9 @@ function load(evt) {
     // Create the player
     player = new Player();
 
+    // Create the game platform
+    createPlatforms();
+
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
 }
@@ -236,6 +239,27 @@ function gamePlay() {
     player.position = position;
 
     updateScreen();
+}
+
+function createPlatforms() {
+    var platforms = svgdoc.getElementById("platforms");
+    for (y = 0; y < GAME_MAP.length; y++) {
+        var start = null, end = null;
+        for (x = 0; x < GAME_MAP[y].length; x++) {
+            if (start == null && GAME_MAP[y].charAt(x) == '#') start = x; if (start != null && GAME_MAP[y].charAt(x) == ' ') end = x - 1; if (start != null && x == GAME_MAP[y].length - 1) end = x;
+            if (start != null && end != null) {
+                var platform = svgdoc.createElementNS("http://www.w3.org/2000/svg", "rect");
+                platform.setAttribute("x", start * 20); 
+                platform.setAttribute("y", y * 20); 
+                platform.setAttribute("width", (end - start + 1) * 20); 
+                platform.setAttribute("height", 20); 
+                platform.setAttribute("fill", "orange");
+                platforms.appendChild(platform);
+                start = end = null; 
+                start = end = null;
+            }
+        }
+    }
 }
 
 
