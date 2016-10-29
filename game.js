@@ -130,6 +130,10 @@ function load(evt) {
     // Create the game platform
     createPlatforms();
 
+    // Create the monsters
+    createMonster(200, 15);
+    createMonster(400, 270);
+
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
 }
@@ -150,6 +154,17 @@ function cleanUpGroup(id, textOnly) {
     }
 }
 
+//
+// This function creates the monsters in the game
+//
+function createMonster(x, y) {
+  var monster = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+  monster.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#monster");
+  monster.setAttribute("x", x);
+  monster.setAttribute("y", y);
+  svgdoc.getElementById("monsters").appendChild(monster);
+}
+
 
 //
 // This is the keydown handling function for the SVG document
@@ -165,14 +180,14 @@ function keydown(evt) {
         case "M".charCodeAt(0):
             player.motion = motionType.RIGHT;
             break;
-			
+
 
         // Add your code here
         case "Z".charCodeAt(0):
             if (player.isOnPlatform()) {
-                player.verticalSpeed = JUMP_SPEED;            
+                player.verticalSpeed = JUMP_SPEED;
             }
-            break;      
+            break;
     }
 }
 
@@ -202,7 +217,7 @@ function keyup(evt) {
 function gamePlay() {
     // Check whether the player is on a platform
     var isOnPlatform = player.isOnPlatform();
-    
+
     // Update player position
     var displacement = new Point();
 
@@ -249,13 +264,13 @@ function createPlatforms() {
             if (start == null && GAME_MAP[y].charAt(x) == '#') start = x; if (start != null && GAME_MAP[y].charAt(x) == ' ') end = x - 1; if (start != null && x == GAME_MAP[y].length - 1) end = x;
             if (start != null && end != null) {
                 var platform = svgdoc.createElementNS("http://www.w3.org/2000/svg", "rect");
-                platform.setAttribute("x", start * 20); 
-                platform.setAttribute("y", y * 20); 
-                platform.setAttribute("width", (end - start + 1) * 20); 
-                platform.setAttribute("height", 20); 
+                platform.setAttribute("x", start * 20);
+                platform.setAttribute("y", y * 20);
+                platform.setAttribute("width", (end - start + 1) * 20);
+                platform.setAttribute("height", 20);
                 platform.setAttribute("fill", "orange");
                 platforms.appendChild(platform);
-                start = end = null; 
+                start = end = null;
                 start = end = null;
             }
         }
@@ -271,9 +286,9 @@ function createPlatforms() {
 function updateScreen() {
     // Transform the player
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
-            
-    // Calculate the scaling and translation factors	
-    
+
+    // Calculate the scaling and translation factors
+
     // Add your code here
-    
+
 }
