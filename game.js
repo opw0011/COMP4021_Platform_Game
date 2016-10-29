@@ -98,6 +98,12 @@ var VERTICAL_DISPLACEMENT = 1;              // The displacement of vertical spee
 
 var GAME_INTERVAL = 25;                     // The time interval of running the game
 
+var BULLET_SIZE = new Size(10, 10); // The size of a bullet
+var BULLET_SPEED = 10.0;           // The speed of a bullet
+                                    //  = pixels it moves each game loop
+var SHOOT_INTERVAL = 200.0;         // The period when shooting is disabled
+var canShoot = true;                // A flag indicating whether the player can shoot a bullet
+
 
 //
 // Variables in the game
@@ -165,6 +171,45 @@ function createMonster(x, y) {
   svgdoc.getElementById("monsters").appendChild(monster);
 }
 
+//
+// This function shoots a bullet from the player
+//
+function shootBullet() {
+    // Disable shooting for a short period of time
+    canShoot = false;
+    // Create the bullet using the use node
+    var bullet = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+    // Calculate and set the position of the bullet
+    bullet.setAttribute("x", player.position.x + PLAYER_SIZE.w / 2);
+    bullet.setAttribute("y", player.position.y + PLAYER_SIZE.h / 2);
+    // Set the href of the use node to the bullet defined in the defs node
+    bullet.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#bullet");
+    // Append the bullet to the bullet group
+    svgdoc.getElementById("bullets").appendChild(bullet);
+    // enable shooting again
+    setTimeout("canShoot = true", SHOOT_INTERVAL);
+}
+
+//
+// This function updates the position of the bullets
+//
+function moveBullets() {
+    // Go through all bullets
+    var bullets = svgdoc.getElementById("bullets");
+    for (var i = 0; i < bullets.childNodes.length; i++) {
+        var node = bullets.childNodes.item(i);
+
+        // Update the position of the bullet
+        var x = parseInt(node.getAttribute("x"));
+        node.setAttribute("x", x + BULLET_SPEED);
+
+        // If the bullet is not inside the screen delete it from the group
+        if (x > SCREEN_SIZE.w) {
+            bullets.removeChild(node);
+            i--;
+        }
+    }
+}
 
 //
 // This is the keydown handling function for the SVG document
@@ -181,12 +226,14 @@ function keydown(evt) {
             player.motion = motionType.RIGHT;
             break;
 
-
-        // Add your code here
         case "Z".charCodeAt(0):
             if (player.isOnPlatform()) {
                 player.verticalSpeed = JUMP_SPEED;
             }
+            break;
+
+        case 32: // spacebar = shoot
+            if (canShoot) shootBullet();
             break;
     }
 }
@@ -252,6 +299,9 @@ function gamePlay() {
 
     // Set the location back to the player object (before update the screen)
     player.position = position;
+
+    // Move the bullets, call the movebullets when you create the monsters and bullets
+    moveBullets();
 
     updateScreen();
 }
