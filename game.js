@@ -141,6 +141,10 @@ function load(evt) {
     createMonster(200, 15);
     createMonster(400, 270);
 
+    // hide the scoreTable in initial
+    var highscoretable = svgdoc.getElementById("highscoretable");
+    highscoretable.setAttribute("visibility", "hidden");
+
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
 }
@@ -398,7 +402,21 @@ function updateScreen() {
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
 
     // Calculate the scaling and translation factors
+    var scale = new Point(zoom, zoom);
+    var translate = new Point();
 
-    // Add your code here
+    translate.x = SCREEN_SIZE.w / 2.0 - (player.position.x + PLAYER_SIZE.w / 2) * scale.x;
+    if (translate.x > 0)
+        translate.x = 0;
+    else if (translate.x < SCREEN_SIZE.w - SCREEN_SIZE.w * scale.x)
+        translate.x = SCREEN_SIZE.w - SCREEN_SIZE.w * scale.x;
 
+    translate.y = SCREEN_SIZE.h / 2.0 - (player.position.y + PLAYER_SIZE.h / 2) * scale.y;
+    if (translate.y > 0)
+        translate.y = 0;
+    else if (translate.y < SCREEN_SIZE.h - SCREEN_SIZE.h * scale.y)
+        translate.y = SCREEN_SIZE.h - SCREEN_SIZE.h * scale.y;
+
+    // Transform the game area
+    svgdoc.getElementById("gamearea").setAttribute("transform", "translate(" + translate.x + "," + translate.y + ") scale(" + scale.x + "," + scale.y + ")");
 }

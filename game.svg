@@ -84,6 +84,19 @@
           <path d="M10,25 l20,0 q0,8 -10,8 t-10,-8" style="fill:orange;stroke:black;stroke-black:2"/>
         </g>
       </g>
+
+      <!--add your highscore table here-->
+      <g id="highscoretable" transform="translate(40,40)">
+        <rect width="520" height="480"
+         style="fill:white;stroke:red;stroke-width:2"/>
+        <text x="260" y="40"
+         style="fill:red;font-size:30px;font-weight:bold;text-anchor:middle">
+          High Score Table
+        </text>
+        <text id="highscoretext" y="45"
+         style="font-size: 20px;font-weight:bold"/>
+      </g>
+
     </g>
   </g>
 </svg>
