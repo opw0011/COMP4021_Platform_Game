@@ -104,6 +104,7 @@ var BULLET_SPEED = 10.0;           // The speed of a bullet
 var SHOOT_INTERVAL = 200.0;         // The period when shooting is disabled
 var canShoot = true;                // A flag indicating whether the player can shoot a bullet
 
+var MONSTER_SIZE = new Size(40, 40);  // The size of a monster
 
 //
 // Variables in the game
@@ -258,10 +259,67 @@ function keyup(evt) {
 }
 
 
+
+//
+// This function checks collision
+//
+function collisionDetection() {
+    // Check whether the player collides with a monster
+    var monsters = svgdoc.getElementById("monsters");
+    for (var i = 0; i < monsters.childNodes.length; i++) {
+        var monster = monsters.childNodes.item(i);
+        var x = parseInt(monster.getAttribute("x"));
+        var y = parseInt(monster.getAttribute("y"));
+
+        if (intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
+            // Clear the game interval
+            clearInterval(gameInterval);
+
+            // Get the high score table from cookies
+
+            // Create the new score record
+
+            // Insert the new score record
+
+            // Store the new high score table
+
+            // Show the high score table
+
+            return;
+        }
+    }
+
+    // Check whether a bullet hits a monster
+    var bullets = svgdoc.getElementById("bullets");
+    for (var i = 0; i < bullets.childNodes.length; i++) {
+        var bullet = bullets.childNodes.item(i);
+        var x = parseInt(bullet.getAttribute("x"));
+        var y = parseInt(bullet.getAttribute("y"));
+
+        for (var j = 0; j < monsters.childNodes.length; j++) {
+            var monster = monsters.childNodes.item(j);
+            var mx = parseInt(monster.getAttribute("x"));
+            var my = parseInt(monster.getAttribute("y"));
+
+            if (intersect(new Point(x, y), BULLET_SIZE, new Point(mx, my), MONSTER_SIZE)) {
+                monsters.removeChild(monster);
+                j--;
+                bullets.removeChild(bullet);
+                i--;
+
+                //write some code to update the score
+            }
+        }
+    }
+}
+
 //
 // This function updates the position and motion of the player in the system
 //
 function gamePlay() {
+    // Check collisions
+    collisionDetection();
+
     // Check whether the player is on a platform
     var isOnPlatform = player.isOnPlatform();
 
