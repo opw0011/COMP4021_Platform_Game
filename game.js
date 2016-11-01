@@ -115,7 +115,7 @@ var svgdoc = null;                          // SVG root document node
 var player = null;                          // The player object
 var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
-
+var score = 0;                              // The score of the game
 
 //
 // The load function for the SVG document
@@ -308,6 +308,8 @@ function collisionDetection() {
                 i--;
 
                 //write some code to update the score
+                var scoreTxt = svgdoc.getElementById("score").firstChild.data;
+                svgdoc.getElementById("score").firstChild.data = parseInt(scoreTxt) + 100;
             }
         }
     }
