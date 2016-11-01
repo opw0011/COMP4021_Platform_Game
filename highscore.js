@@ -2,6 +2,7 @@ var COOKIE_EXPIRE_DAYS = 30;
 
 // UNIT TESTING
 // setHighScoreTable([new ScoreRecord("Funk", 1), new ScoreRecord("GG", 44)]);
+// showHighScoreTable([new ScoreRecord("Funk", 1), new ScoreRecord("GG", 44)])
 // END TESTING
 
 //
@@ -68,18 +69,27 @@ function setHighScoreTable(table) {
 //
 function addHighScore(record, node) {
     // Create the name text span
-    var name = svgdoc.createElementNS("http://www.w3.org/2000/svg", "tspan");
+    var nameDom = svgdoc.createElementNS("http://www.w3.org/2000/svg", "tspan");
 
     // Set the attributes and create the text
+    nameDom.setAttribute("x", 100);
+    nameDom.setAttribute("dy", 40);
 
     // Add the name to the text node
+    var playername = record.name;
+    nameDom.textContent = playername;
+    node.appendChild(nameDom);
 
     // Create the score text span
-    var score = svgdoc.createElementNS("http://www.w3.org/2000/svg", "tspan");
+    var scoreDom = svgdoc.createElementNS("http://www.w3.org/2000/svg", "tspan");
 
     // Set the attributes and create the text
+    scoreDom.setAttribute("x", 400);
 
-    // Add the name to the text node
+    // Add the score to the text node
+    var finalscore = record.score;
+    scoreDom.textContent = finalscore;
+    node.appendChild(scoreDom);
 }
 
 
@@ -93,6 +103,9 @@ function showHighScoreTable(table) {
 
     // Get the high score text node
     var node = svgdoc.getElementById("highscoretext");
+
+    // Clear all the existing recrods
+    node.textContent = "";
 
     for (var i = 0; i < 10; i++) {
         // If i is more than the length of the high score table exit

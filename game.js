@@ -240,6 +240,10 @@ function keydown(evt) {
         case 32: // spacebar = shoot
             if (canShoot) shootBullet();
             break;
+
+        case "C".charCodeAt(0): // cheat mode
+            // kill all monster
+            break;
     }
 }
 
@@ -280,14 +284,31 @@ function collisionDetection() {
             clearInterval(gameInterval);
 
             // Get the high score table from cookies
+            var scoreTable = getHighScoreTable();
 
             // Create the new score record
+            var newRecord = new ScoreRecord("PlayerName", score);
 
             // Insert the new score record
+            var index = 0;
+            // append the record sort by score, higher score in front
+            for(var i = 0; i < scoreTable.length; i++) {
+              if(score < scoreTable[i].score) {
+                index ++;
+              }
+            }
+
+            // only the 10 highest score
+            if(index < 10) {
+              // add new score to score table
+              scoreTable.splice(index, 0, newRecord);
+            }
 
             // Store the new high score table
+            setHighScoreTable(scoreTable);
 
             // Show the high score table
+            showHighScoreTable(scoreTable);
 
             return;
         }
@@ -312,8 +333,9 @@ function collisionDetection() {
                 i--;
 
                 //write some code to update the score
-                var scoreTxt = svgdoc.getElementById("score").firstChild.data;
-                svgdoc.getElementById("score").firstChild.data = parseInt(scoreTxt) + 100;
+                score += 100;
+                // var scoreTxt = svgdoc.getElementById("score").firstChild.data;
+                svgdoc.getElementById("score").firstChild.data = score;
             }
         }
     }
@@ -401,6 +423,7 @@ function updateScreen() {
     // Transform the player
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
 
+/*
     // Calculate the scaling and translation factors
     var scale = new Point(zoom, zoom);
     var translate = new Point();
@@ -419,4 +442,5 @@ function updateScreen() {
 
     // Transform the game area
     svgdoc.getElementById("gamearea").setAttribute("transform", "translate(" + translate.x + "," + translate.y + ") scale(" + scale.x + "," + scale.y + ")");
+*/
 }
