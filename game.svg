@@ -59,6 +59,18 @@
      style="fill:orange;font-size:25px;text-anchor:middle">0</text>
   </g>
 
+  <!-- Time element -->
+  <!--add your score element here-->
+  <g transform="translate(640, 300)">
+    <text x="70" y="0"
+     style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
+      Time:
+    </text>
+    <rect x="0" y="10" width="140" height="35" style="fill:white" />
+    <text id="score" x="70" y="36"
+     style="fill:orange;font-size:25px;text-anchor:middle">120</text>
+  </g>
+
   <!-- Add your button here -->
 
   <g style="clip-path:url(#gameareaclip)">
@@ -96,7 +108,30 @@
         <text id="highscoretext" y="45"
          style="font-size: 20px;font-weight:bold"/>
       </g>
-
     </g>
+  </g>
+
+  <!--starting screen-->
+  <g id="startingscreen" transform="translate(20,20)">
+    <rect width="760" height="560"
+     style="fill:white;stroke:red;stroke-width:2"/>
+    <text x="380" y="50"
+     style="fill:red;font-size:40px;font-weight:bold;text-anchor:middle">
+      Starting Screen
+    </text>
+    <foreignObject x="100" y="90" width="600" height="400">
+      <div xmlns="http://www.w3.org/1999/xhtml"
+        style="color: #dd6500; font-size: 26px;">
+        <p>Game instruction goes here !</p>
+        <p>
+          Use the <strong>N</strong> key to go left,
+          the <strong>M</strong> key to go right and the
+          <strong>Z</strong> key to jump.
+        </p>
+        <p>
+          Use the <strong>Spacebar</strong> to shoot and kill the monsters.
+        </p>
+      </div>
+    </foreignObject>
   </g>
 </svg>

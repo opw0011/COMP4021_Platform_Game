@@ -117,6 +117,7 @@ var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              // The score of the game
 
+
 //
 // The load function for the SVG document
 //
@@ -133,6 +134,17 @@ function load(evt) {
 
     // Create the player
     player = new Player();
+
+    // prompt for player name input
+    // var input = prompt("What is your name", "");
+    if(input == null || input.trim() == "") {
+      player.name = "Anonymous";
+    }
+    else {
+      player.name = input;
+    }
+    console.log(player.name);
+
 
     // Create the game platform
     createPlatforms();
@@ -287,7 +299,7 @@ function collisionDetection() {
             var scoreTable = getHighScoreTable();
 
             // Create the new score record
-            var newRecord = new ScoreRecord("PlayerName", score);
+            var newRecord = new ScoreRecord(player.name, score);
 
             // Insert the new score record
             var index = 0;
@@ -422,25 +434,4 @@ function createPlatforms() {
 function updateScreen() {
     // Transform the player
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
-
-/*
-    // Calculate the scaling and translation factors
-    var scale = new Point(zoom, zoom);
-    var translate = new Point();
-
-    translate.x = SCREEN_SIZE.w / 2.0 - (player.position.x + PLAYER_SIZE.w / 2) * scale.x;
-    if (translate.x > 0)
-        translate.x = 0;
-    else if (translate.x < SCREEN_SIZE.w - SCREEN_SIZE.w * scale.x)
-        translate.x = SCREEN_SIZE.w - SCREEN_SIZE.w * scale.x;
-
-    translate.y = SCREEN_SIZE.h / 2.0 - (player.position.y + PLAYER_SIZE.h / 2) * scale.y;
-    if (translate.y > 0)
-        translate.y = 0;
-    else if (translate.y < SCREEN_SIZE.h - SCREEN_SIZE.h * scale.y)
-        translate.y = SCREEN_SIZE.h - SCREEN_SIZE.h * scale.y;
-
-    // Transform the game area
-    svgdoc.getElementById("gamearea").setAttribute("transform", "translate(" + translate.x + "," + translate.y + ") scale(" + scale.x + "," + scale.y + ")");
-*/
 }
