@@ -27,13 +27,13 @@
             style="fill:gray;fill-opacity:0.5;stroke:black;stroke-width:2"/>
       <circle cx="12" cy="20" r="5"
               style="fill:yellow;stroke:black;stroke-width:2">
-        <animateColor attributeName="fill" values="yellow;red;yellow"
-                      dur="1s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="#F00;#0FF;#F00"
+          calcMode="linear" dur="3s" begin="0s" repeatCount="indefinite"/>
       </circle>
       <circle cx="28" cy="20" r="5"
               style="fill:yellow;stroke:black;stroke-width:2">
-        <animateColor attributeName="fill" values="yellow;red;yellow"
-                      dur="1s" repeatCount="indefinite"/>
+              <animate attributeName="fill" values="#F00;#0FF;#F00"
+                calcMode="linear" dur="3s" begin="0s" repeatCount="indefinite"/>
       </circle>
     </g>
 
