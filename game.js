@@ -145,6 +145,8 @@ function load(evt) {
     }
     console.log(player.name);
 
+    // set the player name on the player svg
+    player.node.children[0].textContent= player.name;
 
     // Create the game platform
     createPlatforms();
@@ -161,6 +163,10 @@ function load(evt) {
     var node = svgdoc.getElementById("highscoretable");
     node.style.setProperty("visibility", "hidden", null);
 
+    // clear previosu game interval
+    if(gameInterval) {
+      clearInterval(gameInterval);
+    }
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
 }

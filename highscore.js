@@ -73,7 +73,7 @@ function addHighScore(record, node) {
 
     // Set the attributes and create the text
     nameDom.setAttribute("x", 100);
-    nameDom.setAttribute("dy", 40);
+    nameDom.setAttribute("dy", 30);
 
     // Add the name to the text node
     var playername = record.name;
