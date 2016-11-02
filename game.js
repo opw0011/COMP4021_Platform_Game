@@ -136,7 +136,7 @@ function load(evt) {
     player = new Player();
 
     // prompt for player name input
-    // var input = prompt("What is your name", "");
+    var input = prompt("What is your name? ^_^", "");
     if(input == null || input.trim() == "") {
       player.name = "Anonymous";
     }
@@ -153,9 +153,13 @@ function load(evt) {
     createMonster(200, 15);
     createMonster(400, 270);
 
+    // hide the starting screen
+    var node = svgdoc.getElementById("startingscreen");
+    node.style.setProperty("visibility", "hidden", null);
+
     // hide the scoreTable in initial
-    var highscoretable = svgdoc.getElementById("highscoretable");
-    highscoretable.setAttribute("visibility", "hidden");
+    var node = svgdoc.getElementById("highscoretable");
+    node.style.setProperty("visibility", "hidden", null);
 
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
