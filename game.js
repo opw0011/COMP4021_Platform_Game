@@ -23,6 +23,7 @@ function Player() {
     this.motion = motionType.NONE;
     this.shootingDirection = motionType.RIGHT;
     this.verticalSpeed = 0;
+    this.numBullet = 8;
 }
 
 Player.prototype.isOnPlatform = function() {
@@ -117,6 +118,8 @@ var player = null;                          // The player object
 var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              // The score of the game
+var gameTimer = null;
+var time = 120;
 
 //
 // The load function for the SVG document
@@ -137,6 +140,9 @@ function load(evt) {
 
     // reset score
     score = 0;
+
+    // reset time
+    time = 120;
 
     // prompt for player name input
     var input = prompt("What is your name? ^_^", "");
@@ -170,10 +176,61 @@ function load(evt) {
     if(gameInterval) {
       clearInterval(gameInterval);
     }
+    if(gameTimer) {
+      clearInterval(gameTimer);
+    }
+
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
+
+    // start game timer
+    gameTimer = setInterval("updateGameTimer()", 1000);
 }
 
+
+function updateGameTimer() {
+    time--;
+    svgdoc.getElementById("timer").textContent = time;
+    // game over
+    if(time <= 0) {
+      console.log("GAME OVER: Timeout");
+      endGame();
+    }
+}
+
+// game OVER
+function endGame() {
+  // Clear the game interval
+  clearInterval(gameInterval);
+  clearInterval(gameTimer);
+
+  // Get the high score table from cookies
+  var scoreTable = getHighScoreTable();
+
+  // Create the new score record
+  var newRecord = new ScoreRecord(player.name, score);
+
+  // Insert the new score record
+  var index = 0;
+  // append the record sort by score, higher score in front
+  for(var i = 0; i < scoreTable.length; i++) {
+    if(score < scoreTable[i].score) {
+      index ++;
+    }
+  }
+
+  // only the 10 highest score
+  if(index < 10) {
+    // add new score to score table
+    scoreTable.splice(index, 0, newRecord);
+  }
+
+  // Store the new high score table
+  setHighScoreTable(scoreTable);
+
+  // Show the high score table
+  showHighScoreTable(scoreTable);
+}
 
 //
 // This function removes all/certain nodes under a group
@@ -207,6 +264,11 @@ function createMonster(x, y) {
 function shootBullet() {
     // Disable shooting for a short period of time
     canShoot = false;
+
+    // update number of bullets remaining
+    player.numBullet--;
+    svgdoc.getElementById("numBullet").textContent = player.numBullet;
+
     // Create the bullet using the use node
     var bullet = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
 
@@ -283,7 +345,9 @@ function keydown(evt) {
             break;
 
         case 32: // spacebar = shoot
-            if (canShoot) shootBullet();
+            if (canShoot && player.numBullet > 0) {
+              shootBullet();
+            }
             break;
 
         case "C".charCodeAt(0): // cheat mode
@@ -324,37 +388,9 @@ function collisionDetection() {
         var x = parseInt(monster.getAttribute("x"));
         var y = parseInt(monster.getAttribute("y"));
 
+        // player collides with a monster, GG GameOver
         if (intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
-            // Clear the game interval
-            clearInterval(gameInterval);
-
-            // Get the high score table from cookies
-            var scoreTable = getHighScoreTable();
-
-            // Create the new score record
-            var newRecord = new ScoreRecord(player.name, score);
-
-            // Insert the new score record
-            var index = 0;
-            // append the record sort by score, higher score in front
-            for(var i = 0; i < scoreTable.length; i++) {
-              if(score < scoreTable[i].score) {
-                index ++;
-              }
-            }
-
-            // only the 10 highest score
-            if(index < 10) {
-              // add new score to score table
-              scoreTable.splice(index, 0, newRecord);
-            }
-
-            // Store the new high score table
-            setHighScoreTable(scoreTable);
-
-            // Show the high score table
-            showHighScoreTable(scoreTable);
-
+            endGame();
             return;
         }
     }
@@ -470,7 +506,7 @@ function updateScreen() {
     var pkc = svgdoc.getElementById("pikachu");
     // flip the character
     if(player.motion == motionType.RIGHT) {
-      pkc.setAttribute("transform", "translate(43,0) scale(-1,1) scale(0.05375, 0.0499)");
+      pkc.setAttribute("transform", "translate(" + PLAYER_SIZE.w +",0) scale(-1,1) scale(0.05375, 0.0499)");
     }
     else if (player.motion == motionType.LEFT){
       pkc.setAttribute("transform", "scale(0.05375, 0.0499)");

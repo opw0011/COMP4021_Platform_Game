@@ -61,15 +61,25 @@
   </g>
 
   <!-- Time element -->
-  <!--add your score element here-->
   <g transform="translate(640, 300)">
     <text x="70" y="0"
      style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
       Time:
     </text>
     <rect x="0" y="10" width="140" height="35" style="fill:white" />
-    <text id="score" x="70" y="36"
+    <text id="timer" x="70" y="36"
      style="fill:orange;font-size:25px;text-anchor:middle">120</text>
+  </g>
+
+  <!-- Bullet element -->
+  <g transform="translate(640, 400)">
+    <text x="70" y="0"
+     style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
+      Bullet:
+    </text>
+    <rect x="0" y="10" width="140" height="35" style="fill:white" />
+    <text id="numBullet" x="70" y="36"
+     style="fill:orange;font-size:25px;text-anchor:middle">8</text>
   </g>
 
   <!-- Add your button here -->
@@ -91,7 +101,7 @@
         <g id="bullets"/>
 
         <g id="player">
-          <text x="20" y="-10" style="text-anchor:middle">Player Name</text>
+          <text x="20" y="-5" style="text-anchor:middle">Player Name</text>
           <!-- <circle cx="20" cy="20" r="20" style="fill:url(#player_color);stroke:black;stroke-width:2"/>
           <ellipse cx="15" cy="15" rx="3" ry="6" style="fill:black"/>
           <ellipse cx="25" cy="15" rx="3" ry="6" style="fill:black"/>
