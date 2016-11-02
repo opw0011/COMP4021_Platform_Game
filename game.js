@@ -21,6 +21,7 @@ function Player() {
     this.node = svgdoc.getElementById("player");
     this.position = PLAYER_INIT_POS;
     this.motion = motionType.NONE;
+    this.shootingDirection = motionType.RIGHT;
     this.verticalSpeed = 0;
 }
 
@@ -117,7 +118,6 @@ var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              // The score of the game
 
-
 //
 // The load function for the SVG document
 //
@@ -134,6 +134,9 @@ function load(evt) {
 
     // Create the player
     player = new Player();
+
+    // reset score
+    score = 0;
 
     // prompt for player name input
     var input = prompt("What is your name? ^_^", "");
@@ -206,9 +209,20 @@ function shootBullet() {
     canShoot = false;
     // Create the bullet using the use node
     var bullet = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+
+    // set shooting direction of bullet
+    bullet.setAttribute("direction", player.shootingDirection);
+
     // Calculate and set the position of the bullet
-    bullet.setAttribute("x", player.position.x + PLAYER_SIZE.w / 2);
-    bullet.setAttribute("y", player.position.y + PLAYER_SIZE.h / 2);
+    if(player.shootingDirection == motionType.RIGHT) {
+      bullet.setAttribute("x", player.position.x + PLAYER_SIZE.w / 2);
+      bullet.setAttribute("y", player.position.y + PLAYER_SIZE.h / 2 - BULLET_SIZE.h / 2);
+    }
+    else {
+      bullet.setAttribute("x", player.position.x - PLAYER_SIZE.w / 2);
+      bullet.setAttribute("y", player.position.y + PLAYER_SIZE.h / 2 - BULLET_SIZE.h / 2);
+    }
+
     // Set the href of the use node to the bullet defined in the defs node
     bullet.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#bullet");
     // Append the bullet to the bullet group
@@ -228,7 +242,14 @@ function moveBullets() {
 
         // Update the position of the bullet
         var x = parseInt(node.getAttribute("x"));
-        node.setAttribute("x", x + BULLET_SPEED);
+        var direction = node.getAttribute("direction");
+        if(direction == motionType.RIGHT) {
+          node.setAttribute("x", x + BULLET_SPEED);
+        }
+        else {
+          node.setAttribute("x", x - BULLET_SPEED);
+        }
+
 
         // If the bullet is not inside the screen delete it from the group
         if (x > SCREEN_SIZE.w) {
@@ -247,10 +268,12 @@ function keydown(evt) {
     switch (keyCode) {
         case "N".charCodeAt(0):
             player.motion = motionType.LEFT;
+            player.shootingDirection = motionType.LEFT;
             break;
 
         case "M".charCodeAt(0):
             player.motion = motionType.RIGHT;
+            player.shootingDirection = motionType.RIGHT;
             break;
 
         case "Z".charCodeAt(0):
@@ -377,8 +400,9 @@ function gamePlay() {
     var displacement = new Point();
 
     // Move left or right
-    if (player.motion == motionType.LEFT)
+    if (player.motion == motionType.LEFT) {
         displacement.x = -MOVE_DISPLACEMENT;
+    }
     if (player.motion == motionType.RIGHT)
         displacement.x = MOVE_DISPLACEMENT;
 
@@ -443,5 +467,15 @@ function createPlatforms() {
 //
 function updateScreen() {
     // Transform the player
+    var pkc = svgdoc.getElementById("pikachu");
+    // flip the character
+    if(player.motion == motionType.RIGHT) {
+      pkc.setAttribute("transform", "translate(43,0) scale(-1,1) scale(0.05375, 0.0499)");
+    }
+    else if (player.motion == motionType.LEFT){
+      pkc.setAttribute("transform", "scale(0.05375, 0.0499)");
+    }
+
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
+
 }
