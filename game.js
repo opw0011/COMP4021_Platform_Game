@@ -209,6 +209,7 @@ function endGame() {
 
   // Create the new score record
   var newRecord = new ScoreRecord(player.name, score);
+  newRecord.curPlayerFlag = true; // additional flag in record to indicate current player socre
 
   // Insert the new score record
   var index = 0;

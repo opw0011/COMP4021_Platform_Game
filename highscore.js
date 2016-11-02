@@ -78,7 +78,6 @@ function addHighScore(record, node) {
     // Add the name to the text node
     var playername = record.name;
     nameDom.textContent = playername;
-    node.appendChild(nameDom);
 
     // Create the score text span
     var scoreDom = svgdoc.createElementNS("http://www.w3.org/2000/svg", "tspan");
@@ -86,9 +85,19 @@ function addHighScore(record, node) {
     // Set the attributes and create the text
     scoreDom.setAttribute("x", 400);
 
+    // Add extra CSS to current user listing on score table
+    if(record.curPlayerFlag != null && record.curPlayerFlag == true) {
+      console.log("Current Player in high score table");
+      nameDom.setAttribute("style", "fill: #43d816; font-style: italic; font-size: 22px;");
+      scoreDom.setAttribute("style", "fill: #43d816; font-style: italic; font-size: 22px;");
+      record.curPlayerFlag = null;
+    }
+
     // Add the score to the text node
     var finalscore = record.score;
     scoreDom.textContent = finalscore;
+
+    node.appendChild(nameDom);
     node.appendChild(scoreDom);
 }
 
