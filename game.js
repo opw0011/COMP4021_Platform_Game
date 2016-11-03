@@ -24,6 +24,7 @@ function Player() {
     this.shootingDirection = motionType.RIGHT;
     this.verticalSpeed = 0;
     this.numBullet = 8;
+    svgdoc.getElementById("numBullet").textContent = this.numBullet;
 }
 
 Player.prototype.isOnPlatform = function() {
@@ -119,7 +120,7 @@ var gameInterval = null;                    // The interval
 var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              // The score of the game
 var gameTimer = null;
-var time = 120;
+var time = 60;
 
 //
 // The load function for the SVG document
@@ -146,7 +147,7 @@ function load(evt) {
     score = 0;
 
     // reset time
-    time = 120;
+    time = 60;
 
     // prompt for player name input
     var input = prompt("What is your name? ^_^", "");
@@ -167,6 +168,9 @@ function load(evt) {
     // Create the monsters
     createMonster(200, 15);
     createMonster(400, 270);
+
+    // create exit
+    createExit(100,200);
 
     // hide the starting screen
     var node = svgdoc.getElementById("startingscreen");
@@ -262,6 +266,16 @@ function createMonster(x, y) {
   monster.setAttribute("y", y);
   svgdoc.getElementById("monsters").appendChild(monster);
 }
+
+function createExit(x, y) {
+  // TODO: check not collides with walls
+  var exit = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+  exit.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#exit");
+  exit.setAttribute("x", x);
+  exit.setAttribute("y", y);
+  svgdoc.getElementById("exitpos").appendChild(exit);
+}
+
 
 //
 // This function shoots a bullet from the player
