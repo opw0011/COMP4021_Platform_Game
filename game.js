@@ -134,6 +134,10 @@ function load(evt) {
 
     // Remove text nodes in the 'platforms' group
     cleanUpGroup("platforms", true);
+    // Remove old elements
+    cleanUpGroup("monsters", false);
+    cleanUpGroup("bullets", false);
+    cleanUpGroup("platforms", false);
 
     // Create the player
     player = new Player();
@@ -220,8 +224,8 @@ function endGame() {
     }
   }
 
-  // only the 10 highest score
-  if(index < 10) {
+  // only top5 highest score
+  if(index < 5) {
     // add new score to score table
     scoreTable.splice(index, 0, newRecord);
   }

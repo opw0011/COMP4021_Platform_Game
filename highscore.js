@@ -1,4 +1,5 @@
 var COOKIE_EXPIRE_DAYS = 30;
+var NUM_TOP_SCORE = 5;
 
 // UNIT TESTING
 // setHighScoreTable([new ScoreRecord("Funk", 1), new ScoreRecord("GG", 44)]);
@@ -20,7 +21,7 @@ function ScoreRecord(name, score) {
 function getHighScoreTable() {
     var table = new Array();
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < NUM_TOP_SCORE; i++) {
         // Contruct the cookie name
         var cookieName = "player" + i;
         // Get the cookie value using the cookie name
@@ -47,7 +48,7 @@ function getHighScoreTable() {
 // This function stores the high score table to the cookies
 //
 function setHighScoreTable(table) {
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < NUM_TOP_SCORE; i++) {
         // If i is more than the length of the high score table exit
         // from the for loop
         if (i >= table.length) break;
@@ -73,7 +74,7 @@ function addHighScore(record, node) {
 
     // Set the attributes and create the text
     nameDom.setAttribute("x", 100);
-    nameDom.setAttribute("dy", 30);
+    nameDom.setAttribute("dy", 50);
 
     // Add the name to the text node
     var playername = record.name;
@@ -88,8 +89,8 @@ function addHighScore(record, node) {
     // Add extra CSS to current user listing on score table
     if(record.curPlayerFlag != null && record.curPlayerFlag == true) {
       console.log("Current Player in high score table");
-      nameDom.setAttribute("style", "fill: #43d816; font-style: italic; font-size: 22px;");
-      scoreDom.setAttribute("style", "fill: #43d816; font-style: italic; font-size: 22px;");
+      nameDom.setAttribute("style", "fill: #43d816; font-style: italic; font-size: 28px;");
+      scoreDom.setAttribute("style", "fill: #43d816; font-style: italic; font-size: 28px;");
       record.curPlayerFlag = null;
     }
 
@@ -116,7 +117,7 @@ function showHighScoreTable(table) {
     // Clear all the existing recrods
     node.textContent = "";
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < NUM_TOP_SCORE; i++) {
         // If i is more than the length of the high score table exit
         // from the for loop
         if (i >= table.length) break;
