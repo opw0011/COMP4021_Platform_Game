@@ -111,6 +111,7 @@ var canShoot = true;                // A flag indicating whether the player can 
 var MONSTER_SIZE = new Size(40, 40);  // The size of a monster
 
 var EXIT_SIZE = new Size(45, 40);       // the size of the exit gate
+var GD_SIZE = new Size(20, 25);       // the size of the goodie
 
 // Score formula
 var SCORE_MONSTER = 50;
@@ -185,6 +186,9 @@ function setupGame(level) {
   // Generate monsters according to the level
   // initial: 4 monsters, add 4 each time
   spawnMonsters(6 + (level - 1) * 4);
+
+  // Spawn good thing
+  spawnGoodies(8);
 
   // create exit
   createExit(100,50);
@@ -274,6 +278,7 @@ function resetGame() {
   cleanUpGroup("bullets", false);
   // cleanUpGroup("platforms", false);
   cleanUpGroup("exitpos", false);
+  cleanUpGroup("goodies", false);
 }
 
 function updateGameTimer() {
@@ -313,6 +318,7 @@ function createMonster(x, y) {
 
 // create N monsters in map randomly
 function spawnMonsters(n) {
+  var playerProtectZone = new Size(PLAYER_SIZE.w + 100, PLAYER_SIZE.h + 100); // area to protect monster spawn near player
   for(var i = 0; i < n; i++) {
     var monster = {};
     var x = getRandomInt(0, SCREEN_SIZE.w - MONSTER_SIZE.w);
@@ -321,19 +327,76 @@ function spawnMonsters(n) {
     console.log("monster " + i + "  x:" + x + " y:" + y);
 
     // make sure monster cannot spawn close to player
-    var playerProtectZone = new Size(PLAYER_SIZE.w + 100, PLAYER_SIZE.h + 100);
     while(true) {
       if(! intersect(player.position, playerProtectZone, monster.position, MONSTER_SIZE))
         break;
-      console.log("monster collides with player");
+      // console.log("monster collides with player");
       console.log(player.position);
       console.log(monster.position);
       monster.position.x = getRandomInt(0, SCREEN_SIZE.w - MONSTER_SIZE.w);
       monster.position.y = getRandomInt(0, SCREEN_SIZE.h - MONSTER_SIZE.h);
-      console.log("new");
-      console.log(monster.position);
+      // console.log("new");
+      // console.log(monster.position);
     }
     createMonster(monster.position.x , monster.position.y);
+  }
+}
+
+function createGoodie(x, y) {
+  var goodie = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+  goodie.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#goodie");
+  goodie.setAttribute("x", x);
+  goodie.setAttribute("y", y);
+  svgdoc.getElementById("goodies").appendChild(goodie);
+}
+
+function spawnGoodies(n) {
+  for(var i = 0; i < n; i++) {
+    var goodie = {};
+    var x = getRandomInt(0, SCREEN_SIZE.w - GD_SIZE.w);
+    var y = getRandomInt(0, SCREEN_SIZE.h - GD_SIZE.h);
+    goodie.position = new Point(x, y);
+    // make sure goodies cannot spawn insides platforms
+
+    while(true) {
+      if(! iscollideWithPlatform(goodie.position, GD_SIZE))
+        break;
+
+      // console.log("gd collides with walls");
+      // console.log(goodie.position);
+      goodie.position.x = getRandomInt(0, SCREEN_SIZE.w - GD_SIZE.w);
+      goodie.position.y = getRandomInt(0, SCREEN_SIZE.h - GD_SIZE.h);
+    }
+    createGoodie(goodie.position.x, goodie.position.y);
+  }
+}
+
+function iscollideWithPlatform(pos, size) {
+  var platforms = svgdoc.getElementById("platforms");
+  for (var i = 0; i < platforms.childNodes.length; i++) {
+      var node = platforms.childNodes.item(i);
+      if (node.nodeName != "rect") continue;
+
+      var x = parseFloat(node.getAttribute("x"));
+      var y = parseFloat(node.getAttribute("y"));
+      var w = parseFloat(node.getAttribute("width"));
+      var h = parseFloat(node.getAttribute("height"));
+      var wpos = new Point(x, y);
+      var wsize = new Size(w, h);
+
+      if (intersect(pos, size, wpos, wsize)) {
+        return true;
+      }
+      // if (intersect(pos, size, wpos, wsize)) {
+      //     // position.x = this.position.x;
+      //     // if (intersect(position, PLAYER_SIZE, pos, size)) {
+      //     //     if (this.position.y >= y + h)
+      //     //         position.y = y + h;
+      //     //     else
+      //     //         position.y = y - PLAYER_SIZE.h;
+      //     //     this.verticalSpeed = 0;
+      //     // }
+      // }
   }
 }
 
