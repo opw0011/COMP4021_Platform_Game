@@ -23,8 +23,8 @@ function Player() {
     this.motion = motionType.NONE;
     this.shootingDirection = motionType.RIGHT;
     this.verticalSpeed = 0;
-    this.numBullet = 8;
-    svgdoc.getElementById("numBullet").textContent = this.numBullet;
+    // this.numBullet = 8;
+    // svgdoc.getElementById("numBullet").textContent = this.numBullet;
 }
 
 Player.prototype.isOnPlatform = function() {
@@ -107,6 +107,7 @@ var BULLET_SPEED = 10.0;           // The speed of a bullet
                                     //  = pixels it moves each game loop
 var SHOOT_INTERVAL = 200.0;         // The period when shooting is disabled
 var canShoot = true;                // A flag indicating whether the player can shoot a bullet
+var numBullet = 8;
 
 var MONSTER_SIZE = new Size(40, 40);  // The size of a monster
 
@@ -133,6 +134,7 @@ var gameTimer = null;
 var time = 60;
 var level = 1;
 var defaultPlayerName = "";
+var cheatModeOn = false;
 
 //
 // The load function for the SVG document
@@ -178,6 +180,11 @@ function setupGame(level) {
     else {
       defaultPlayerName = input;
     }
+  }
+
+  // reset Bullet
+  if(! cheatModeOn) {
+    setBullet(8);
   }
 
   player.name = defaultPlayerName;  // when level up, keep the player name
@@ -267,6 +274,7 @@ function restartGame() {
   node.style.setProperty("visibility", "hidden", null);
   setLevel(1);
   setScore(0);  // reset score
+  cheatModeOn = false // disable cheat mode
   setupGame(1);
 }
 
@@ -387,17 +395,8 @@ function iscollideWithPlatform(pos, size) {
       if (intersect(pos, size, wpos, wsize)) {
         return true;
       }
-      // if (intersect(pos, size, wpos, wsize)) {
-      //     // position.x = this.position.x;
-      //     // if (intersect(position, PLAYER_SIZE, pos, size)) {
-      //     //     if (this.position.y >= y + h)
-      //     //         position.y = y + h;
-      //     //     else
-      //     //         position.y = y - PLAYER_SIZE.h;
-      //     //     this.verticalSpeed = 0;
-      //     // }
-      // }
   }
+  return false;
 }
 
 
@@ -419,8 +418,9 @@ function shootBullet() {
     canShoot = false;
 
     // update number of bullets remaining
-    player.numBullet--;
-    svgdoc.getElementById("numBullet").textContent = player.numBullet;
+    if(! cheatModeOn) {
+      setBullet(numBullet - 1);
+    }
 
     // Create the bullet using the use node
     var bullet = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
@@ -498,13 +498,21 @@ function keydown(evt) {
             break;
 
         case 32: // spacebar = shoot
-            if (canShoot && player.numBullet > 0) {
+            if (canShoot && (numBullet > 0 || cheatModeOn)) {
               shootBullet();
             }
             break;
 
         case "C".charCodeAt(0): // cheat mode
-            // kill all monster
+            // Player not die and Unlimited bullets
+            cheatModeOn = true;
+            svgdoc.getElementById("numBullet").textContent = "Unlimited";
+            setBullet(-1);
+            break;
+
+        case "V".charCodeAt(0): // exit cheat mode
+            cheatModeOn = false;
+            setBullet(8);
             break;
     }
 }
@@ -536,16 +544,18 @@ function keyup(evt) {
 function collisionDetection() {
     // Check whether the player collides with a monster
     var monsters = svgdoc.getElementById("monsters");
-    for (var i = 0; i < monsters.childNodes.length; i++) {
-        var monster = monsters.childNodes.item(i);
-        var x = parseInt(monster.getAttribute("x"));
-        var y = parseInt(monster.getAttribute("y"));
+    if(!cheatModeOn) {
+      for (var i = 0; i < monsters.childNodes.length; i++) {
+          var monster = monsters.childNodes.item(i);
+          var x = parseInt(monster.getAttribute("x"));
+          var y = parseInt(monster.getAttribute("y"));
 
-        // player collides with a monster, GG GameOver
-        if (intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
-            endGame();
-            return;
-        }
+          // player collides with a monster, GG GameOver
+          if (intersect(new Point(x, y), MONSTER_SIZE, player.position, PLAYER_SIZE)) {
+              endGame();
+              return;
+          }
+      }
     }
 
     // Check whether a bullet hits a monster
@@ -579,8 +589,30 @@ function collisionDetection() {
       var y = parseInt(exit.getAttribute("y"));
       // console.log(x +" " + y);
       if (intersect(new Point(x, y), EXIT_SIZE, player.position, PLAYER_SIZE)) {
-          levelUp();
+          // check if all the goodies are collected
+          var goodies = svgdoc.getElementById("goodies");
+          if(goodies.childNodes.length == 0) {
+            levelUp();
+          }
+          else {
+            console.log("Please collect all goodies first");
+          }
       }
+    }
+
+    // check whether a player touch the good thing
+    var goodies = svgdoc.getElementById("goodies");
+    for (var i = 0; i < goodies.childNodes.length; i++) {
+        var goodie = goodies.childNodes.item(i);
+        var x = parseInt(goodie.getAttribute("x"));
+        var y = parseInt(goodie.getAttribute("y"));
+
+        // player collides with a monster, GG GameOver
+        if (intersect(new Point(x, y), GD_SIZE, player.position, PLAYER_SIZE)) {
+            goodies.removeChild(goodie);
+            setScore(score + SCORE_GOODTHING);
+            return;
+        }
     }
 }
 
@@ -682,7 +714,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
 /*
 SETTERS
 */
@@ -700,10 +731,19 @@ function setLevel(l) {
   }
 }
 
-
 function setTime(t) {
   if(t >= 0) {
     time = t;
     svgdoc.getElementById("timer").textContent = time;
+  }
+}
+
+function setBullet(n) {
+  if(n >= 0) {
+    numBullet = n;
+    svgdoc.getElementById("numBullet").textContent = numBullet;
+  }
+  else {
+    svgdoc.getElementById("numBullet").textContent = "Unlimited";
   }
 }

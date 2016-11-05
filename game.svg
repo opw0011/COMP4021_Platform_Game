@@ -46,6 +46,7 @@
 
     <!-- define exit -->
     <g id="exit" transform="scale(0.35)">
+      <text x="60" style="font-size:40px;text-anchor:middle; fill:red">Exit</text>
       <g>
         <polygon style="fill:#C12727;" points="117.975,94.518 7.712,94.518 20.31,6.981 105.377,6.981 		"/>
       </g>
