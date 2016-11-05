@@ -112,6 +112,11 @@ var MONSTER_SIZE = new Size(40, 40);  // The size of a monster
 
 var EXIT_SIZE = new Size(45, 40);       // the size of the exit gate
 
+// Score formula
+var SCORE_MONSTER = 50;
+var SCORE_GOODTHING = 10;
+var SCORE_LEVEL = 200;
+var SCORE_TIME = 1;
 
 //
 // Variables in the game
@@ -236,17 +241,20 @@ function levelUp() {
   // increase the level and difficulties
   console.log("Level up!!");
 
-  // each level + 100 score
-  setScore(score + 100);
+  // + LEVEL * 200
+  setScore(score + (SCORE_LEVEL * level));
+
+  // + Remaining time
+  setScore(score + (SCORE_TIME * time));
 
   // level up by 1
   setLevel(level + 1);
 
+  numMonsters *= 2;
+
   // Clear the game interval
   clearInterval(gameInterval);
   clearInterval(gameTimer);
-
-  numMonsters *= 2;
 
   setupGame(level);
 }
@@ -472,9 +480,7 @@ function collisionDetection() {
                 i--;
 
                 //write some code to update the score
-                score += 100;
-                // var scoreTxt = svgdoc.getElementById("score").firstChild.data;
-                svgdoc.getElementById("score").firstChild.data = score;
+                setScore(score + SCORE_MONSTER);
             }
         }
     }
