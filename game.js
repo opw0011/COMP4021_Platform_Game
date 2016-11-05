@@ -93,7 +93,8 @@ Player.prototype.collideScreen = function(position) {
 //
 var PLAYER_SIZE = new Size(40, 40);         // The size of the player
 var SCREEN_SIZE = new Size(600, 560);       // The size of the game screen
-var PLAYER_INIT_POS  = new Point(0, 0);     // The initial position of the player
+// var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the player
+var PLAYER_INIT_POS  = new Point(0, 50);     // The initial position of the player
 
 var MOVE_DISPLACEMENT = 5;                  // The speed of the player in motion
 var JUMP_SPEED = 15;                        // The speed of the player jumping
@@ -109,6 +110,9 @@ var canShoot = true;                // A flag indicating whether the player can 
 
 var MONSTER_SIZE = new Size(40, 40);  // The size of a monster
 
+var EXIT_SIZE = new Size(45, 40);       // the size of the exit gate
+
+
 //
 // Variables in the game
 //
@@ -121,6 +125,9 @@ var zoom = 1.0;                             // The zoom level of the screen
 var score = 0;                              // The score of the game
 var gameTimer = null;
 var time = 60;
+var level = 1;
+var numMonsters = 2;
+var defaultPlayerName = "";
 
 //
 // The load function for the SVG document
@@ -139,6 +146,7 @@ function load(evt) {
     cleanUpGroup("monsters", false);
     cleanUpGroup("bullets", false);
     cleanUpGroup("platforms", false);
+    cleanUpGroup("exitpos", false);
 
     // Create the player
     player = new Player();
@@ -150,13 +158,14 @@ function load(evt) {
     time = 60;
 
     // prompt for player name input
-    var input = prompt("What is your name? ^_^", "");
+    var input = prompt("What is your name? ^_^", defaultPlayerName);
     if(input == null || input.trim() == "") {
       player.name = "Anonymous";
     }
     else {
       player.name = input;
     }
+    defaultPlayerName = player.name;
     console.log(player.name);
 
     // set the player name on the player svg
@@ -170,7 +179,7 @@ function load(evt) {
     createMonster(400, 270);
 
     // create exit
-    createExit(100,200);
+    createExit(100,50);
 
     // hide the starting screen
     var node = svgdoc.getElementById("startingscreen");
@@ -239,6 +248,71 @@ function endGame() {
 
   // Show the high score table
   showHighScoreTable(scoreTable);
+}
+
+// level up
+function levelUp() {
+  // TODO: clear game
+  // Reset timer
+  // increase the level and difficulties
+  console.log("Level up!!");
+  level ++;
+  // score += 100;
+  setScore(score + 100);
+
+  svgdoc.getElementById("level").textContent = level;
+  //add level score
+
+  // Clear the game interval
+  clearInterval(gameInterval);
+  clearInterval(gameTimer);
+
+  numMonsters *= 2;
+
+  setupGame(level);
+}
+
+// Restart game
+function restartGame() {
+  // TODO: clear all monsters,bullets,good things
+  // reset timer
+  // reset score
+  level = 1;
+  svgdoc.getElementById("level").textContent = level;
+}
+
+function setupGame(level) {
+  resetGame();
+  createMonster(200, 15);
+  createMonster(400, 270);
+
+  // create exit
+  createExit(100,50);
+
+  // Start the game interval
+  gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
+
+  // start game timer
+  gameTimer = setInterval("updateGameTimer()", 1000);
+
+  // Create the player
+  player = new Player();
+  if(defaultPlayerName != "") {
+    player.name = defaultPlayerName;  // when level up, keep the player name
+  }
+
+  // reset time
+  time = 60;
+}
+
+function resetGame() {
+  // Remove text nodes in the 'platforms' group
+  cleanUpGroup("platforms", true);
+  // Remove old elements
+  cleanUpGroup("monsters", false);
+  cleanUpGroup("bullets", false);
+  // cleanUpGroup("platforms", false);
+  cleanUpGroup("exitpos", false);
 }
 
 //
@@ -439,6 +513,17 @@ function collisionDetection() {
             }
         }
     }
+
+    // check whether a player reach the exit
+    var exit = svgdoc.getElementById("exitpos").childNodes[0];
+    {
+      var x = parseInt(exit.getAttribute("x"));
+      var y = parseInt(exit.getAttribute("y"));
+      // console.log(x +" " + y);
+      if (intersect(new Point(x, y), EXIT_SIZE, player.position, PLAYER_SIZE)) {
+          levelUp();
+      }
+    }
 }
 
 //
@@ -533,4 +618,17 @@ function updateScreen() {
 
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
 
+}
+
+
+
+/*
+SETTERS
+*/
+
+function setScore(s) {
+  if(s >= 0) {
+    score = s;
+    svgdoc.getElementById("score").firstChild.data = score;
+  }
 }
