@@ -93,11 +93,11 @@ Player.prototype.collideScreen = function(position) {
 //
 var PLAYER_SIZE = new Size(40, 40);         // The size of the player
 var SCREEN_SIZE = new Size(600, 560);       // The size of the game screen
-// var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the player
-var PLAYER_INIT_POS  = new Point(0, 50);     // The initial position of the player
+var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the player
+// var PLAYER_INIT_POS  = new Point(0, 20);     // The initial position of the player
 
 var MOVE_DISPLACEMENT = 5;                  // The speed of the player in motion
-var JUMP_SPEED = 15;                        // The speed of the player jumping
+var JUMP_SPEED = 12;                        // The speed of the player jumping
 var VERTICAL_DISPLACEMENT = 1;              // The displacement of vertical speed
 
 var GAME_INTERVAL = 25;                     // The time interval of running the game
@@ -131,7 +131,6 @@ var score = 0;                              // The score of the game
 var gameTimer = null;
 var time = 60;
 var level = 1;
-var numMonsters = 2;
 var defaultPlayerName = "";
 
 //
@@ -183,9 +182,9 @@ function setupGame(level) {
   player.name = defaultPlayerName;  // when level up, keep the player name
   player.node.children[0].textContent= defaultPlayerName; // set the player name on the player svg
 
-  // TODO: Generate monsters according to the level
-  createMonster(200, 15);
-  createMonster(400, 270);
+  // Generate monsters according to the level
+  // initial: 4 monsters, add 4 each time
+  spawnMonsters(6 + (level - 1) * 4);
 
   // create exit
   createExit(100,50);
@@ -250,8 +249,6 @@ function levelUp() {
   // level up by 1
   setLevel(level + 1);
 
-  numMonsters *= 2;
-
   // Clear the game interval
   clearInterval(gameInterval);
   clearInterval(gameTimer);
@@ -313,6 +310,33 @@ function createMonster(x, y) {
   monster.setAttribute("y", y);
   svgdoc.getElementById("monsters").appendChild(monster);
 }
+
+// create N monsters in map randomly
+function spawnMonsters(n) {
+  for(var i = 0; i < n; i++) {
+    var monster = {};
+    var x = getRandomInt(0, SCREEN_SIZE.w - MONSTER_SIZE.w);
+    var y = getRandomInt(0, SCREEN_SIZE.h - MONSTER_SIZE.h);
+    monster.position = new Point(x, y);
+    console.log("monster " + i + "  x:" + x + " y:" + y);
+
+    // make sure monster cannot spawn close to player
+    var playerProtectZone = new Size(PLAYER_SIZE.w + 100, PLAYER_SIZE.h + 100);
+    while(true) {
+      if(! intersect(player.position, playerProtectZone, monster.position, MONSTER_SIZE))
+        break;
+      console.log("monster collides with player");
+      console.log(player.position);
+      console.log(monster.position);
+      monster.position.x = getRandomInt(0, SCREEN_SIZE.w - MONSTER_SIZE.w);
+      monster.position.y = getRandomInt(0, SCREEN_SIZE.h - MONSTER_SIZE.h);
+      console.log("new");
+      console.log(monster.position);
+    }
+    createMonster(monster.position.x , monster.position.y);
+  }
+}
+
 
 function createExit(x, y) {
   // TODO: check not collides with walls
@@ -591,6 +615,9 @@ function updateScreen() {
 
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 
 /*
