@@ -140,46 +140,10 @@ function load(evt) {
     svgdoc.documentElement.addEventListener("keydown", keydown, false);
     svgdoc.documentElement.addEventListener("keyup", keyup, false);
 
-    // Remove text nodes in the 'platforms' group
-    cleanUpGroup("platforms", true);
-    // Remove old elements
-    cleanUpGroup("monsters", false);
-    cleanUpGroup("bullets", false);
-    cleanUpGroup("platforms", false);
-    cleanUpGroup("exitpos", false);
-
-    // Create the player
-    player = new Player();
-
-    // reset score
-    score = 0;
-
-    // reset time
-    time = 60;
-
-    // prompt for player name input
-    var input = prompt("What is your name? ^_^", defaultPlayerName);
-    if(input == null || input.trim() == "") {
-      player.name = "Anonymous";
-    }
-    else {
-      player.name = input;
-    }
-    defaultPlayerName = player.name;
-    console.log(player.name);
-
-    // set the player name on the player svg
-    player.node.children[0].textContent= player.name;
-
     // Create the game platform
     createPlatforms();
 
-    // Create the monsters
-    createMonster(200, 15);
-    createMonster(400, 270);
-
-    // create exit
-    createExit(100,50);
+    setupGame(1);
 
     // hide the starting screen
     var node = svgdoc.getElementById("startingscreen");
@@ -188,31 +152,47 @@ function load(evt) {
     // hide the scoreTable in initial
     var node = svgdoc.getElementById("highscoretable");
     node.style.setProperty("visibility", "hidden", null);
-
-    // clear previosu game interval
-    if(gameInterval) {
-      clearInterval(gameInterval);
-    }
-    if(gameTimer) {
-      clearInterval(gameTimer);
-    }
-
-    // Start the game interval
-    gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
-
-    // start game timer
-    gameTimer = setInterval("updateGameTimer()", 1000);
 }
 
+// Set up the game environment for each level
+function setupGame(level) {
+  resetGame();
+  console.log("Setting up game... level " + level);
 
-function updateGameTimer() {
-    time--;
-    svgdoc.getElementById("timer").textContent = time;
-    // game over
-    if(time <= 0) {
-      console.log("GAME OVER: Timeout");
-      endGame();
+  // Create the player
+  player = new Player();
+
+  if(level == 1) {
+    setScore(0);
+
+    // prompt for player name input
+    var input = prompt("What is your name? ^_^", defaultPlayerName);
+    if(input == null || input.trim() == "") {
+      defaultPlayerName= "Anonymous";
     }
+    else {
+      defaultPlayerName = input;
+    }
+  }
+
+  player.name = defaultPlayerName;  // when level up, keep the player name
+  player.node.children[0].textContent= defaultPlayerName; // set the player name on the player svg
+
+  // TODO: Generate monsters according to the level
+  createMonster(200, 15);
+  createMonster(400, 270);
+
+  // create exit
+  createExit(100,50);
+
+  // reset time
+  setTime(60);
+
+  // Start the game interval
+  gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
+
+  // start game timer
+  gameTimer = setInterval("updateGameTimer()", 1000);
 }
 
 // game OVER
@@ -252,16 +232,15 @@ function endGame() {
 
 // level up
 function levelUp() {
-  // TODO: clear game
-  // Reset timer
+
   // increase the level and difficulties
   console.log("Level up!!");
-  level ++;
-  // score += 100;
+
+  // each level + 100 score
   setScore(score + 100);
 
-  svgdoc.getElementById("level").textContent = level;
-  //add level score
+  // level up by 1
+  setLevel(level + 1);
 
   // Clear the game interval
   clearInterval(gameInterval);
@@ -272,37 +251,14 @@ function levelUp() {
   setupGame(level);
 }
 
-// Restart game
+// Restart game, when restart btn is clicked
 function restartGame() {
-  // TODO: clear all monsters,bullets,good things
-  // reset timer
-  // reset score
-  level = 1;
-  svgdoc.getElementById("level").textContent = level;
-}
-
-function setupGame(level) {
-  resetGame();
-  createMonster(200, 15);
-  createMonster(400, 270);
-
-  // create exit
-  createExit(100,50);
-
-  // Start the game interval
-  gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
-
-  // start game timer
-  gameTimer = setInterval("updateGameTimer()", 1000);
-
-  // Create the player
-  player = new Player();
-  if(defaultPlayerName != "") {
-    player.name = defaultPlayerName;  // when level up, keep the player name
-  }
-
-  // reset time
-  time = 60;
+  // hide the scoreTable
+  var node = svgdoc.getElementById("highscoretable");
+  node.style.setProperty("visibility", "hidden", null);
+  setLevel(1);
+  setScore(0);  // reset score
+  setupGame(1);
 }
 
 function resetGame() {
@@ -313,6 +269,15 @@ function resetGame() {
   cleanUpGroup("bullets", false);
   // cleanUpGroup("platforms", false);
   cleanUpGroup("exitpos", false);
+}
+
+function updateGameTimer() {
+    setTime(time - 1);
+    // game over
+    if(time <= 0) {
+      console.log("GAME OVER: Timeout");
+      endGame();
+    }
 }
 
 //
@@ -625,10 +590,24 @@ function updateScreen() {
 /*
 SETTERS
 */
-
 function setScore(s) {
   if(s >= 0) {
     score = s;
-    svgdoc.getElementById("score").firstChild.data = score;
+    svgdoc.getElementById("score").textContent = score;
+  }
+}
+
+function setLevel(l) {
+  if(l >= 1) {
+    level = l;
+    svgdoc.getElementById("level").textContent = level;
+  }
+}
+
+
+function setTime(t) {
+  if(t >= 0) {
+    time = t;
+    svgdoc.getElementById("timer").textContent = time;
   }
 }
