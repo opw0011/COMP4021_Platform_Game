@@ -105,7 +105,7 @@ var GAME_INTERVAL = 25;                     // The time interval of running the 
 var BULLET_SIZE = new Size(10, 10); // The size of a bullet
 var BULLET_SPEED = 10.0;           // The speed of a bullet
                                     //  = pixels it moves each game loop
-var SHOOT_INTERVAL = 200.0;         // The period when shooting is disabled
+var SHOOT_INTERVAL = 500.0;         // The period when shooting is disabled
 var canShoot = true;                // A flag indicating whether the player can shoot a bullet
 var numBullet = 8;
 
@@ -149,6 +149,10 @@ function load(evt) {
 
     // Create the game platform
     createPlatforms();
+
+    // set music volumn
+    var bgAudio = document.getElementById("bgmusic");
+    bgAudio.volumn = 0.35;
 
     setupGame(1);
 
@@ -212,6 +216,9 @@ function setupGame(level) {
 
 // game OVER
 function endGame() {
+  // play sound
+  document.getElementById("a_die").play();
+
   // Clear the game interval
   clearInterval(gameInterval);
   clearInterval(gameTimer);
@@ -414,6 +421,9 @@ function createExit(x, y) {
 // This function shoots a bullet from the player
 //
 function shootBullet() {
+    // play sound
+    document.getElementById("a_pika").play();
+
     // Disable shooting for a short period of time
     canShoot = false;
 
@@ -576,6 +586,8 @@ function collisionDetection() {
                 bullets.removeChild(bullet);
                 i--;
 
+                // play sound
+                document.getElementById("a_beep").play();
                 //write some code to update the score
                 setScore(score + SCORE_MONSTER);
             }
@@ -688,7 +700,6 @@ function createPlatforms() {
         }
     }
 }
-
 
 //
 // This function updates the position of the player's SVG object and
