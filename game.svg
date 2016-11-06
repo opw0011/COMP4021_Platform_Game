@@ -251,7 +251,9 @@
 
         <g id="platforms">
           <!-- Add your platforms here -->
-          <rect x="20" y="520" width="100" height="20" style="fill:red"/>
+          <rect id="movingplatform" x="550" y="520" min="380" max="490" up="true" width="50" height="20" style="fill:red">
+          </rect>
+
         </g>
 
         <!--add monsters to the gamearea-->

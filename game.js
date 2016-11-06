@@ -21,10 +21,8 @@ function Player() {
     this.node = svgdoc.getElementById("player");
     this.position = PLAYER_INIT_POS;
     this.motion = motionType.NONE;
-    this.shootingDirection = motionType.RIGHT;
+    this.shootingDirection = motionType.LEFT;
     this.verticalSpeed = 0;
-    // this.numBullet = 8;
-    // svgdoc.getElementById("numBullet").textContent = this.numBullet;
 }
 
 Player.prototype.isOnPlatform = function() {
@@ -53,6 +51,7 @@ Player.prototype.collidePlatform = function(position) {
     for (var i = 0; i < platforms.childNodes.length; i++) {
         var node = platforms.childNodes.item(i);
         if (node.nodeName != "rect") continue;
+        if (node.id == "movingplatform") continue;
 
         var x = parseFloat(node.getAttribute("x"));
         var y = parseFloat(node.getAttribute("y"));
@@ -74,6 +73,36 @@ Player.prototype.collidePlatform = function(position) {
     }
 }
 
+Player.prototype.collideVerticalPlatform = function(position) {
+  var node = svgdoc.getElementById("movingplatform");
+  var x = parseFloat(node.getAttribute("x"));
+  var y = parseFloat(node.getAttribute("y"));
+  var w = parseFloat(node.getAttribute("width"));
+  var h = parseFloat(node.getAttribute("height"));
+  var pos = new Point(x, y);
+  var size = new Size(w, h);
+
+  if (intersect(position, PLAYER_SIZE, pos, size)) {
+      if(! (Math.abs(this.position.y + PLAYER_SIZE.h - y) <= 1))
+        position.x = this.position.x;
+      if (intersect(position, PLAYER_SIZE, pos, size)) {
+          if (this.position.y >= y + h) {
+            // below the platform
+            position.y = y + h;
+          }
+          else {
+            // place on top of platform
+            position.y = y - PLAYER_SIZE.h;
+            console.log(123);
+            console.log(this.position);
+            console.log(position);
+            console.log(pos);
+          }
+          this.verticalSpeed = 0;
+      }
+  }
+}
+
 Player.prototype.collideScreen = function(position) {
     if (position.x < 0) position.x = 0;
     if (position.x + PLAYER_SIZE.w > SCREEN_SIZE.w) position.x = SCREEN_SIZE.w - PLAYER_SIZE.w;
@@ -87,14 +116,29 @@ Player.prototype.collideScreen = function(position) {
     }
 }
 
+Player.prototype.isOnVerticalPlatform = function() {
+    var node = svgdoc.getElementById("movingplatform");
+    var x = parseFloat(node.getAttribute("x"));
+    var y = parseFloat(node.getAttribute("y"));
+    var w = parseFloat(node.getAttribute("width"));
+    var h = parseFloat(node.getAttribute("height"));
+
+    var onPlatform = (this.position.x + PLAYER_SIZE.w > x) && (this.position.x < x + w);
+    onPlatform = onPlatform && (Math.abs(this.position.y + PLAYER_SIZE.h - y) <= 1);  // stand on platform
+    onPlatform = onPlatform && (this.position.y < y + h);
+
+    return onPlatform;
+}
+
 
 //
 // Below are constants used in the game
 //
 var PLAYER_SIZE = new Size(40, 40);         // The size of the player
 var SCREEN_SIZE = new Size(600, 560);       // The size of the game screen
-var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the player
+// var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the player
 // var PLAYER_INIT_POS  = new Point(0, 20);     // The initial position of the player
+var PLAYER_INIT_POS  = new Point(450, 400);     // The initial position of the player
 
 var MOVE_DISPLACEMENT = 5;                  // The speed of the player in motion
 var JUMP_SPEED = 12;                        // The speed of the player jumping
@@ -119,6 +163,9 @@ var SCORE_MONSTER = 50;
 var SCORE_GOODTHING = 10;
 var SCORE_LEVEL = 200;
 var SCORE_TIME = 1;
+
+var PLATFORM_VERTICAL_DISPLACEMENT = 1;              // The displacement of vertical speed
+
 
 //
 // Variables in the game
@@ -626,6 +673,8 @@ function collisionDetection() {
             return;
         }
     }
+
+
 }
 
 //
@@ -635,16 +684,20 @@ function gamePlay() {
     // Check collisions
     collisionDetection();
 
+    // update vertical platform, moving up and down
+    updateVerticalPlatform();
+
     // Check whether the player is on a platform
     var isOnPlatform = player.isOnPlatform();
+    // console.log(isOnPlatform);
 
     // Update player position
     var displacement = new Point();
 
     // Move left or right
-    if (player.motion == motionType.LEFT) {
+    if (player.motion == motionType.LEFT)
         displacement.x = -MOVE_DISPLACEMENT;
-    }
+
     if (player.motion == motionType.RIGHT)
         displacement.x = MOVE_DISPLACEMENT;
 
@@ -670,6 +723,7 @@ function gamePlay() {
     // Check collision with platforms and screen
     player.collidePlatform(position);
     player.collideScreen(position);
+    player.collideVerticalPlatform(position);
 
     // Set the location back to the player object (before update the screen)
     player.position = position;
@@ -701,6 +755,23 @@ function createPlatforms() {
     }
 }
 
+function updateVerticalPlatform() {
+    var node = svgdoc.getElementById("movingplatform");
+    var y = parseInt(node.getAttribute("y"));
+    if(y >= node.getAttribute("max")) {
+      node.setAttribute("up", "true");
+    }
+    if(y <= node.getAttribute("min")) {
+      node.setAttribute("up", "false");
+    }
+    if(node.getAttribute("up") == "true") {
+        node.setAttribute("y", y - PLATFORM_VERTICAL_DISPLACEMENT);
+    }
+    else {
+      node.setAttribute("y", y + PLATFORM_VERTICAL_DISPLACEMENT);
+    }
+}
+
 //
 // This function updates the position of the player's SVG object and
 // set the appropriate translation of the game screen relative to the
@@ -718,7 +789,6 @@ function updateScreen() {
     }
 
     player.node.setAttribute("transform", "translate(" + player.position.x + "," + player.position.y + ")");
-
 }
 
 function getRandomInt(min, max) {
