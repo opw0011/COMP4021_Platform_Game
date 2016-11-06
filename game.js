@@ -243,6 +243,10 @@ function setupGame(level) {
     player.name = defaultPlayerName; // when level up, keep the player name
     player.node.children[0].textContent = defaultPlayerName; // set the player name on the player svg
 
+    // create d platforms
+    createDisappearingPlatform(450, 500, 100, 20);
+    createDisappearingPlatform(450, 520, 100, 20);
+
     // Generate monsters according to the level
     // initial: 4 monsters, add 4 each time
     spawnMonsters(6 + (level - 1) * 4);
@@ -343,6 +347,17 @@ function resetGame() {
     // cleanUpGroup("platforms", false);
     cleanUpGroup("exitpos", false);
     cleanUpGroup("goodies", false);
+
+    var platforms = svgdoc.getElementById("platforms");
+    // reset visibility of disappearing platforms
+    for (var i = 0; i < platforms.childNodes.length; i++) {
+      var node = platforms.childNodes.item(i);
+      if (node.nodeName != "rect") continue;
+      if (node.getAttribute("type") == "disappearing") {
+        node.setAttribute("disappear", "false");
+        node.style.setProperty("opacity", "1.0", null);
+      }
+    }
 }
 
 function updateGameTimer() {
@@ -465,6 +480,17 @@ function createExit(x, y) {
     svgdoc.getElementById("exitpos").appendChild(exit);
 }
 
+function createDisappearingPlatform(x, y, w, h) {
+    var dp = svgdoc.createElementNS("http://www.w3.org/2000/svg", "rect");
+    dp.setAttribute("type", "disappearing");
+    dp.setAttribute("x", x);
+    dp.setAttribute("y", y);
+    dp.setAttribute("width", w);
+    dp.setAttribute("height", h);
+    dp.setAttribute("disappear", "false");
+    dp.setAttribute("style", "fill:blue;opacity:1;");
+    svgdoc.getElementById("platforms").appendChild(dp);
+}
 
 //
 // This function shoots a bullet from the player
