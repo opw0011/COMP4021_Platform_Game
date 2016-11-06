@@ -1,3 +1,15 @@
+TODO:
+Transmission Portal
+monster animation
+monster random move
+flip monster when opposite side
+
+IMPROVE:
+sound
+theme
+
+BUG:
+vertical platform (BUG WHEN JUMP FROM BUTTOM)
 ====================
 Scoring formula
 ====================

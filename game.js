@@ -156,6 +156,7 @@ var MONSTER_SIZE = new Size(40, 40); // The size of a monster
 
 var EXIT_SIZE = new Size(45, 40); // the size of the exit gate
 var GD_SIZE = new Size(20, 25); // the size of the goodie
+var TP_SIZE = new Size(40, 45); // the size of the transmission portal
 
 // Score formula
 var SCORE_MONSTER = 50;
@@ -255,7 +256,10 @@ function setupGame(level) {
     spawnGoodies(8);
 
     // create exit
-    createExit(100, 50);
+    createExit(100, 55);
+
+    // create portals
+    createPortal(420, 400);
 
     // reset time
     setTime(60);
@@ -490,6 +494,14 @@ function createDisappearingPlatform(x, y, w, h) {
     dp.setAttribute("disappear", "false");
     dp.setAttribute("style", "fill:blue;opacity:1;");
     svgdoc.getElementById("platforms").appendChild(dp);
+}
+
+function createPortal(x, y) {
+    var portal = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+    portal.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "portal.svg#portal");
+    portal.setAttribute("x", x);
+    portal.setAttribute("y", y);
+    svgdoc.getElementById("portals").appendChild(portal);
 }
 
 //
