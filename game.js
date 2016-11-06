@@ -93,10 +93,10 @@ Player.prototype.collideVerticalPlatform = function(position) {
           else {
             // place on top of platform
             position.y = y - PLAYER_SIZE.h;
-            console.log(123);
-            console.log(this.position);
-            console.log(position);
-            console.log(pos);
+            // console.log(123);
+            // console.log(this.position);
+            // console.log(position);
+            // console.log(pos);
           }
           this.verticalSpeed = 0;
       }
@@ -673,8 +673,6 @@ function collisionDetection() {
             return;
         }
     }
-
-
 }
 
 //
@@ -731,6 +729,8 @@ function gamePlay() {
     // Move the bullets, call the movebullets when you create the monsters and bullets
     moveBullets();
 
+    UpdateDisappearingPlatform();
+
     updateScreen();
 }
 
@@ -770,6 +770,36 @@ function updateVerticalPlatform() {
     else {
       node.setAttribute("y", y + PLATFORM_VERTICAL_DISPLACEMENT);
     }
+}
+
+function UpdateDisappearingPlatform() {
+  // disappearing platform
+  var platforms = svgdoc.getElementById("platforms");
+  for (var i = 0; i < platforms.childNodes.length; i++) {
+      var platform = platforms.childNodes.item(i);
+      if (platform.nodeName != "rect") continue;
+      if (platform.getAttribute("type") == "disappearing") {
+        // check if close to platform
+        var x = parseInt(platform.getAttribute("x"));
+        var y = parseInt(platform.getAttribute("y"));
+        var w = parseInt(platform.getAttribute("width"));
+        var h= parseInt(platform.getAttribute("height"));
+
+        // if player touch a platform, it will disappear graduatly
+        if(player.position.x >= x && player.position.x <= x + w && player.position.y + PLAYER_SIZE.h - y == 0) {
+          platform.setAttribute("disappear", "true");
+        }
+
+        if(platform.getAttribute("disappear") == "true") {
+          var platformOpacity = parseFloat(platform.style.getPropertyValue("opacity"));
+          if(platformOpacity <= 0) {
+            platforms.removeChild(platform);
+          }
+          platformOpacity -= 0.1;
+          platform.style.setProperty("opacity", platformOpacity, null);
+        }
+      }
+  }
 }
 
 //
