@@ -165,6 +165,7 @@ var SCORE_LEVEL = 200;
 var SCORE_TIME = 1;
 
 var PLATFORM_VERTICAL_DISPLACEMENT = 1; // The displacement of vertical speed
+var MONSTER_MAX_DISPLACEMENT = 70; // The displacement of vertical speed
 
 
 //
@@ -398,6 +399,11 @@ function createMonster(x, y) {
     monster.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster.svg#monster");
     monster.setAttribute("x", x);
     monster.setAttribute("y", y);
+    monster.setAttribute("rotate", getRandomInt(0,40));
+    monster.setAttribute("animation", 0);
+    monster.setAttribute("speed", getRandomInt(1,3));
+    monster.setAttribute("motion", getRandomInt(0,1));
+    monster.setAttribute("anchorx", x);
     svgdoc.getElementById("monsters").appendChild(monster);
 }
 
@@ -570,6 +576,62 @@ function moveBullets() {
             i--;
         }
     }
+}
+
+function moveMonsters() {
+  var monsters = svgdoc.getElementById("monsters");
+  // return;
+  for (var i = 0; i < monsters.childNodes.length; i++) {
+
+      var node = monsters.childNodes.item(i);
+      var rotate = parseInt(node.getAttribute("rotate"));
+      var motion = node.getAttribute("motion");
+      var anchorx = parseInt(node.getAttribute("anchorx"));
+      var speed = parseInt(node.getAttribute("speed"));
+      var x = parseInt(node.getAttribute("x"));
+      var y = parseInt(node.getAttribute("y"));
+
+      // Moving Left or RIGHT
+      if(x < anchorx && anchorx - x > MONSTER_MAX_DISPLACEMENT || x <= 0) {
+        motion = motionType.RIGHT;
+      }
+      if(x >= anchorx && x - anchorx > MONSTER_MAX_DISPLACEMENT || x >= SCREEN_SIZE.w - MONSTER_SIZE.w) {
+        motion = motionType.LEFT;
+      }
+      node.setAttribute("motion", motion);
+
+      if(motion == motionType.LEFT) {
+        x -= speed;
+        node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster.svg#monster");
+      }
+      else {
+        x += speed;
+        node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster1.svg#monster");
+      }
+      // node.setAttribute("transform", "");
+
+      node.setAttribute("x", x);
+
+      // Rotate animation
+      if(rotate > 40) {
+        node.setAttribute("animation", 1);
+      }
+      if(rotate < -40) {
+        node.setAttribute("animation", 0);
+      }
+
+      var animation = node.getAttribute("animation");
+      if(animation == 1)  {
+        rotate -= 1;
+      }
+      else {
+        rotate += 2;
+      }
+
+      var rotateParam = "rotate(" + rotate + "," + x + "," + y +")";
+      node.setAttribute("rotate", rotate);
+      node.setAttribute("transform", rotateParam);
+  }
 }
 
 //
@@ -802,6 +864,8 @@ function gamePlay() {
     moveBullets();
 
     UpdateDisappearingPlatform();
+
+    moveMonsters();
 
     updateScreen();
 }
