@@ -441,9 +441,18 @@ function spawnMonsters(n) {
 function spawnSpecialMonster(x, y) {
     // spawn on platform, away from player
     // random spawn
-    var smonster = createMonster(x, y);
-    console.log(smonster);
+    // TODO: Random x, y and on platform
+    var smonster = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
+    smonster.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "smonster.svg#smonster");
+    smonster.setAttribute("x", x);
+    smonster.setAttribute("y", y);
+    smonster.setAttribute("rotate", getRandomInt(0,40));
+    smonster.setAttribute("animation", 0);
+    smonster.setAttribute("speed", getRandomInt(1,2));
+    smonster.setAttribute("motion", getRandomInt(0,1));
+    smonster.setAttribute("anchorx", x);
     smonster.setAttribute("canShoot", "true");
+    svgdoc.getElementById("monsters").appendChild(smonster);
 }
 
 function createGoodie(x, y) {
@@ -601,6 +610,7 @@ function moveMonsters() {
       var node = monsters.childNodes.item(i);
       var rotate = parseInt(node.getAttribute("rotate"));
       var motion = node.getAttribute("motion");
+      var canShoot = node.getAttribute("canShoot");
       var anchorx = parseInt(node.getAttribute("anchorx"));
       var speed = parseInt(node.getAttribute("speed"));
       var x = parseInt(node.getAttribute("x"));
@@ -617,16 +627,25 @@ function moveMonsters() {
 
       if(motion == motionType.LEFT) {
         x -= speed;
-        node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster.svg#monster");
+        if(canShoot == "false")
+          node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster.svg#monster");
+        else {
+          node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "smonster.svg#smonster");
+        }
       }
       else {
         x += speed;
-        node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster1.svg#monster");
+        if(canShoot == "false")
+          node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster1.svg#monster");
+        else
+          node.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "smonster.svg#smonster");
+
       }
       // node.setAttribute("transform", "");
 
       node.setAttribute("x", x);
 
+      if(canShoot == "true")  continue; // special monster dont rotate
       // Rotate animation
       if(rotate > 40) {
         node.setAttribute("animation", 1);
