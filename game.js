@@ -165,7 +165,7 @@ var SCORE_LEVEL = 200;
 var SCORE_TIME = 1;
 
 var PLATFORM_VERTICAL_DISPLACEMENT = 1; // The displacement of vertical speed
-var MONSTER_MAX_DISPLACEMENT = 70; // The displacement of vertical speed
+var MONSTER_MAX_DISPLACEMENT = 60; // The displacement of vertical speed
 
 
 //
@@ -409,7 +409,7 @@ function createMonster(x, y) {
 
 // create N monsters in map randomly
 function spawnMonsters(n) {
-    var playerProtectZone = new Size(PLAYER_SIZE.w + 100, PLAYER_SIZE.h + 100); // area to protect monster spawn near player
+    var playerProtectZone = new Size(PLAYER_SIZE.w + 150, PLAYER_SIZE.h + 150); // area to protect monster spawn near player
     for (var i = 0; i < n; i++) {
         var monster = {};
         var x = getRandomInt(0, SCREEN_SIZE.w - MONSTER_SIZE.w);
@@ -418,8 +418,11 @@ function spawnMonsters(n) {
         console.log("monster " + i + "  x:" + x + " y:" + y);
 
         // make sure monster cannot spawn close to player
+        var playerOffSetPosition = new Point(player.position.x - playerProtectZone.w/2, player.position.y - playerProtectZone.h/2);
+
         while (true) {
-            if (!intersect(player.position, playerProtectZone, monster.position, MONSTER_SIZE))
+            // if (!intersect(player.position, playerProtectZone, monster.position, MONSTER_SIZE))
+            if (!intersect(playerOffSetPosition, playerProtectZone, monster.position, MONSTER_SIZE))
                 break;
             // console.log("monster collides with player");
             console.log(player.position);
