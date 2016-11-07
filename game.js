@@ -145,7 +145,7 @@ var VERTICAL_DISPLACEMENT = 1; // The displacement of vertical speed
 
 var GAME_INTERVAL = 25; // The time interval of running the game
 
-var BULLET_SIZE = new Size(10, 10); // The size of a bullet
+var BULLET_SIZE = new Size(12, 12); // The size of a bullet
 var BULLET_SPEED = 10.0; // The speed of a bullet
 //  = pixels it moves each game loop
 var SHOOT_INTERVAL = 500.0; // The period when shooting is disabled
@@ -404,7 +404,9 @@ function createMonster(x, y) {
     monster.setAttribute("speed", getRandomInt(1,3));
     monster.setAttribute("motion", getRandomInt(0,1));
     monster.setAttribute("anchorx", x);
+    monster.setAttribute("canShoot", "false");
     svgdoc.getElementById("monsters").appendChild(monster);
+    return monster;
 }
 
 // create N monsters in map randomly
@@ -434,6 +436,14 @@ function spawnMonsters(n) {
         }
         createMonster(monster.position.x, monster.position.y);
     }
+}
+
+function spawnSpecialMonster(x, y) {
+    // spawn on platform, away from player
+    // random spawn
+    var smonster = createMonster(x, y);
+    console.log(smonster);
+    smonster.setAttribute("canShoot", "true");
 }
 
 function createGoodie(x, y) {
@@ -547,7 +557,9 @@ function shootBullet() {
     }
 
     // Set the href of the use node to the bullet defined in the defs node
-    bullet.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#bullet");
+    // bullet.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#bullet");
+    bullet.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "pokeball.svg#bullet");
+
     // Append the bullet to the bullet group
     svgdoc.getElementById("bullets").appendChild(bullet);
     // enable shooting again
