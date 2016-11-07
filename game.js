@@ -395,7 +395,7 @@ function cleanUpGroup(id, textOnly) {
 //
 function createMonster(x, y) {
     var monster = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
-    monster.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#monster");
+    monster.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "monster.svg#monster");
     monster.setAttribute("x", x);
     monster.setAttribute("y", y);
     svgdoc.getElementById("monsters").appendChild(monster);
