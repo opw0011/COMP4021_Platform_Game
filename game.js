@@ -156,7 +156,7 @@ var MONSTER_SIZE = new Size(40, 40); // The size of a monster
 
 var EXIT_SIZE = new Size(45, 40); // the size of the exit gate
 var GD_SIZE = new Size(20, 25); // the size of the goodie
-var TP_SIZE = new Size(40, 45); // the size of the transmission portal
+var TP_SIZE = new Size(30, 35); // the size of the transmission portal
 
 // Score formula
 var SCORE_MONSTER = 50;
@@ -259,7 +259,9 @@ function setupGame(level) {
     createExit(100, 55);
 
     // create portals
-    createPortal(420, 400);
+    createPortal(560, 320, "tp1");
+    createPortal(0, 280, "tp1");
+
 
     // reset time
     setTime(60);
@@ -496,11 +498,12 @@ function createDisappearingPlatform(x, y, w, h) {
     svgdoc.getElementById("platforms").appendChild(dp);
 }
 
-function createPortal(x, y) {
+function createPortal(x, y, id) {
     var portal = svgdoc.createElementNS("http://www.w3.org/2000/svg", "use");
     portal.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "portal.svg#portal");
     portal.setAttribute("x", x);
     portal.setAttribute("y", y);
+    portal.setAttribute("pid", id);
     svgdoc.getElementById("portals").appendChild(portal);
 }
 
@@ -702,11 +705,44 @@ function collisionDetection() {
         var x = parseInt(goodie.getAttribute("x"));
         var y = parseInt(goodie.getAttribute("y"));
 
-        // player collides with a monster, GG GameOver
         if (intersect(new Point(x, y), GD_SIZE, player.position, PLAYER_SIZE)) {
             goodies.removeChild(goodie);
             setScore(score + SCORE_GOODTHING);
             return;
+        }
+    }
+
+    // check whether a player touch portal
+    var portals = svgdoc.getElementById("portals");
+    for (var i = 0; i < portals.childNodes.length; i++) {
+        var portal = portals.childNodes.item(i);
+        var x = parseInt(portal.getAttribute("x"));
+        var y = parseInt(portal.getAttribute("y"));
+
+        // player collides with a TP, move to another portal
+        if (intersect(new Point(x, y), TP_SIZE, player.position, PLAYER_SIZE)) {
+            console.log("TP");
+            // hot fix, assume only 2 portal
+            for(var j = 0; j < portals.childNodes.length; j++) {
+              if(i == j)  continue;
+              var portal2 = portals.childNodes.item(j);
+              if(portal.getAttribute("pid") != portal2.getAttribute("pid")) continue;
+
+              // same portal
+              var x = parseInt(portal2.getAttribute("x"));
+              var y = parseInt(portal2.getAttribute("y"));
+
+              if(player.motion == motionType.LEFT) {
+                player.position.x = x - TP_SIZE.w;
+                player.position.y = y + TP_SIZE.h;
+              }
+              else {
+                player.position.x = x + TP_SIZE.w;
+                player.position.y = y + TP_SIZE.h;
+              }
+              player.verticalSpeed = 0;
+              break;
+            }
         }
     }
 }
