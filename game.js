@@ -327,6 +327,9 @@ function levelUp() {
     // increase the level and difficulties
     console.log("Level up!!");
 
+    // play sound
+    document.getElementById("a_levelup").play();
+
     // + LEVEL * 200
     setScore(score + (SCORE_LEVEL * level));
 
@@ -886,6 +889,8 @@ function collisionDetection() {
         if (intersect(new Point(x, y), GD_SIZE, player.position, PLAYER_SIZE)) {
             goodies.removeChild(goodie);
             setScore(score + SCORE_GOODTHING);
+            // play sound
+            document.getElementById("a_goodie").play();
             return;
         }
     }
@@ -921,6 +926,9 @@ function collisionDetection() {
               player.verticalSpeed = 0;
               break;
             }
+
+            // play sound
+            document.getElementById("a_goodie").play();
         }
     }
 

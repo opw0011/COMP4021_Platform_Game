@@ -11,8 +11,10 @@
       <rect x="20" y="20" width="600" height="560"/>
     </clipPath>
     <pattern id="background_pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-      <rect width="20" height="20" style="fill:yellow"/>
-      <circle cx="10" cy="10" r="8" style="fill:lightyellow"/>
+      <rect width="20" height="20" style="fill:#2C2C2C;"/>
+      <circle style="fill:#F21111B3;" cx="10" cy="5" r="9"/>
+      <rect style="fill:#b09662;" x="5" height="5" width="15"/>
+      <rect width="5" style="fill:#fda77a;" height="15"/>
     </pattern>
     <radialGradient id="player_color">
       <stop offset="0.0" style="stop-color:yellow;stop-opacity:1"/>
@@ -176,12 +178,13 @@
 
   </defs>
 
-  <rect width="100%" height="100%" style="fill:url(#background_pattern);stroke:orange;stroke-width:4" />
+  <rect width="100%" height="100%" style="fill:url(#background_pattern);stroke:#180963;stroke-width:5;" />
 
-  <rect x="20" y="20" width="600" height="560" style="fill:black;stroke:red;stroke-width:5" />
+  <rect x="20" y="20" width="600" height="560" style="fill:black;stroke:#323232;stroke-width:15;/*! stroke-dasharray: 10,3; */stroke-linejoin: round;" />
 
   <!--add your score element here-->
   <g transform="translate(640, 120)">
+    <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
      style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
       Score:
@@ -193,6 +196,7 @@
 
   <!-- Level element -->
   <g transform="translate(640, 300)">
+    <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
      style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
       Level:
@@ -204,6 +208,7 @@
 
   <!-- Time element -->
   <g transform="translate(640, 400)">
+    <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
      style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
       Time:
@@ -215,6 +220,7 @@
 
   <!-- Bullet element -->
   <g transform="translate(640, 500)">
+    <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
      style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
       Bullet:
@@ -418,9 +424,9 @@
       <!--add your highscore table here-->
       <g id="highscoretable" transform="translate(40,40)">
         <rect width="520" height="480"
-         style="fill:white;stroke:red;stroke-width:2"/>
+         style="fill:#E6FF68;stroke:#353535;stroke-width:20;"/>
         <text x="260" y="40"
-         style="fill:red;font-size:30px;font-weight:bold;text-anchor:middle">
+         style="fill:#de2b2b;font-size:38px;font-weight:bold;text-anchor:middle;">
           High Score Table
         </text>
         <text id="highscoretext" y="45"
