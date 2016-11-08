@@ -209,7 +209,7 @@ function load(evt) {
 
     // set music volumn
     var bgAudio = document.getElementById("bgmusic");
-    bgAudio.volumn = 0.35;
+    bgAudio.volumn = 0.1;
 
     setupGame(1);
 
