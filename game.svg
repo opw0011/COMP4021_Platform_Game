@@ -183,51 +183,61 @@
   <rect x="20" y="20" width="600" height="560" style="fill:black;stroke:#323232;stroke-width:15;/*! stroke-dasharray: 10,3; */stroke-linejoin: round;" />
 
   <!--add your score element here-->
-  <g transform="translate(640, 120)">
+  <g transform="translate(640, 40)">
     <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
-     style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
-      Score:
+     style="fill:white;font-size:25px;font-weight:bold;text-anchor:middle">
+      😊Score
     </text>
     <rect x="0" y="10" width="140" height="35" style="fill:white" />
     <text id="score" x="70" y="36"
-     style="fill:orange;font-size:25px;text-anchor:middle">0</text>
+     style="fill:#f02424;font-size:25px;text-anchor:middle;font-weight:bold">0</text>
+  </g>
+
+  <!-- Game Title -->
+  <g transform="translate(640, 220)">
+          <rect style="fill:#EF5400;/*! stroke-width: 8; *//*! stroke: #afd595b3; */" x="0" height="50" width="140" y="-70" ry="10" rx="50"/>
+    <text xmlns="http://www.w3.org/2000/svg" x="70" style="fill:#fff;font-size:25px;font-weight:bold;text-anchor:middle" y="-40">🐣</text>
+        <rect width="140" style="fill:#ECEBE7;/*! stroke-width: 8; *//*! stroke: #afd595b3; */" x="0" height="50" y="-30"/>
+        <text x="70" y="0" style="fill:#e40909;font-size:25px;font-weight:bold;text-anchor:middle">
+          Pika Egg
+        </text>
   </g>
 
   <!-- Level element -->
-  <g transform="translate(640, 300)">
+  <g transform="translate(640, 340)">
     <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
-     style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
-      Level:
+     style="fill:white;font-size:25px;font-weight:bold;text-anchor:middle">
+      🔥Level
     </text>
     <rect x="0" y="10" width="140" height="35" style="fill:white" />
     <text id="level" x="70" y="36"
-     style="fill:orange;font-size:25px;text-anchor:middle">1</text>
+     style="fill:#f02424;font-size:25px;text-anchor:middle;font-weight:bold">1</text>
   </g>
 
   <!-- Time element -->
-  <g transform="translate(640, 400)">
+  <g transform="translate(640, 440)">
     <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
-     style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
-      Time:
+     style="fill:white;font-size:25px;font-weight:bold;text-anchor:middle">
+      🕛Time
     </text>
     <rect x="0" y="10" width="140" height="35" style="fill:white" />
     <text id="timer" x="70" y="36"
-     style="fill:orange;font-size:25px;text-anchor:middle">60</text>
+     style="fill:#f02424;font-size:25px;text-anchor:middle;font-weight:bold">60</text>
   </g>
 
   <!-- Bullet element -->
-  <g transform="translate(640, 500)">
+  <g transform="translate(640, 540)">
     <rect width="140" style="fill:#323232;" x="0" y="-20" height="30"/>
     <text x="70" y="0"
-     style="fill:orange;font-size:25px;font-weight:bold;text-anchor:middle">
-      Bullet:
+     style="fill:white;font-size:25px;font-weight:bold;text-anchor:middle">
+      💣Bullet
     </text>
     <rect x="0" y="10" width="140" height="35" style="fill:white" />
     <text id="numBullet" x="70" y="36"
-     style="fill:orange;font-size:25px;text-anchor:middle">8</text>
+     style="fill:#f02424;font-size:25px;text-anchor:middle;font-weight:bold">8</text>
   </g>
 
   <!-- Add your button here -->
@@ -235,7 +245,7 @@
   <g style="clip-path:url(#gameareaclip)">
     <g transform="translate(20,20)">
       <g id="gamearea" transform="translate(0,0)" width="600" height="560">
-        <rect x="0" y="0" width="600" height="560" style="fill:white" />
+        <rect x="0" y="0" width="600" height="560" style="fill:#FFF" />
 
         <g id="platforms">
           <!-- Add your platforms here -->
@@ -424,7 +434,7 @@
       <!--add your highscore table here-->
       <g id="highscoretable" transform="translate(40,40)">
         <rect width="520" height="480"
-         style="fill:#E6FF68;stroke:#353535;stroke-width:20;"/>
+         style="fill:#FFF;stroke:#353535;stroke-width:20;"/>
         <text x="260" y="40"
          style="fill:#de2b2b;font-size:38px;font-weight:bold;text-anchor:middle;">
           High Score Table

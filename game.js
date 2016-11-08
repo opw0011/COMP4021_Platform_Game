@@ -1023,9 +1023,11 @@ function createPlatforms() {
                 var platform = svgdoc.createElementNS("http://www.w3.org/2000/svg", "rect");
                 platform.setAttribute("x", start * 20);
                 platform.setAttribute("y", y * 20);
+
                 platform.setAttribute("width", (end - start + 1) * 20);
                 platform.setAttribute("height", 20);
-                platform.setAttribute("fill", "orange");
+                // platform.setAttribute("style", "fill:#B71919");
+                platform.setAttribute("style", "fill:#7BBD62");
                 platforms.appendChild(platform);
                 start = end = null;
                 start = end = null;
