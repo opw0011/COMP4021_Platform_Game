@@ -83,7 +83,7 @@ Player.prototype.collideVerticalPlatform = function(position) {
     var size = new Size(w, h);
 
     if (intersect(position, PLAYER_SIZE, pos, size)) {
-        if (!(Math.abs(this.position.y + PLAYER_SIZE.h - y) <= 1))
+        if (!(Math.abs(this.position.y + PLAYER_SIZE.h - y) <= PLATFORM_VERTICAL_DISPLACEMENT))
             position.x = this.position.x;
         if (intersect(position, PLAYER_SIZE, pos, size)) {
             if (this.position.y >= y + h) {
@@ -168,7 +168,7 @@ var SCORE_GOODTHING = 10;
 var SCORE_LEVEL = 200;
 var SCORE_TIME = 1;
 
-var PLATFORM_VERTICAL_DISPLACEMENT = 1; // The displacement of vertical speed
+var PLATFORM_VERTICAL_DISPLACEMENT = 2; // The displacement of vertical speed
 var MONSTER_MAX_DISPLACEMENT = 60; // The displacement of vertical speed
 
 
@@ -251,7 +251,7 @@ function setupGame(level) {
     player.node.children[0].textContent = defaultPlayerName; // set the player name on the player svg
 
     // create d platforms
-    createDisappearingPlatform(450, 500, 100, 20);
+    createDisappearingPlatform(80, 380, 60, 20);
     createDisappearingPlatform(450, 520, 100, 20);
 
     // Generate monsters according to the level
@@ -266,11 +266,11 @@ function setupGame(level) {
     spawnGoodies(8);
 
     // create exit
-    createExit(100, 55);
+    createExit(0, 40);
 
     // create portals
-    createPortal(560, 320, "tp1");
-    createPortal(0, 280, "tp1");
+    createPortal(565, 85, "tp1");
+    createPortal(0, 180, "tp1");
 
 
     // reset time
@@ -916,7 +916,8 @@ function collisionDetection() {
               var y = parseInt(portal2.getAttribute("y"));
 
               if(player.motion == motionType.LEFT) {
-                player.position.x = x - TP_SIZE.w;
+                // player.position.x = x - TP_SIZE.w;
+                player.position.x = x - PLAYER_SIZE.w;
                 player.position.y = y + TP_SIZE.h;
               }
               else {
