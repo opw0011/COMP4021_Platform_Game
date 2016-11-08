@@ -21,8 +21,9 @@
     </radialGradient>
 
     <!--define you bullet here-->
+    <!-- monster bullet -->
     <g id="bullet" direction="">
-      <circle cx="5" cy="5" r="5" style="fill:red"/>
+      <circle cx="5" cy="5" r="5" style="fill:purple"/>
       <circle cx="6" cy="3" r="1" style="fill:pink"/>
     </g>
 
