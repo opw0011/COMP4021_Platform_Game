@@ -142,7 +142,7 @@ var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the pla
 // var PLAYER_INIT_POS = new Point(450, 400); // The initial position of the player
 
 var MOVE_DISPLACEMENT = 5; // The speed of the player in motion
-var JUMP_SPEED = 15; // The speed of the player jumping
+var JUMP_SPEED = 13; // The speed of the player jumping
 var VERTICAL_DISPLACEMENT = 1; // The displacement of vertical speed
 
 var GAME_INTERVAL = 25; // The time interval of running the game

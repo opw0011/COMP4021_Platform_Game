@@ -249,7 +249,7 @@
 
         <g id="platforms">
           <!-- Add your platforms here -->
-          <rect id="movingplatform" y="290" min="210" max="490" up="true" height="20" style="fill:#e43a3a;" x="400" width="80">
+          <rect id="movingplatform" y="290" min="210" max="480" up="true" height="20" style="fill:#e43a3a;" x="400" width="80">
           </rect>
           <!-- <rect type="disappearing" disappear="false" x="450" y="500" width="100" height="20" style="fill:blue;opacity:1;" /> -->
           <!-- <rect type="disappearing" disappear="false" x="450" y="520" width="100" height="20" style="fill:blue;opacity:1;" /> -->
