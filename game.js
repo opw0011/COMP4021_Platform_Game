@@ -135,9 +135,9 @@ Player.prototype.isOnVerticalPlatform = function() {
 //
 var PLAYER_SIZE = new Size(40, 40); // The size of the player
 var SCREEN_SIZE = new Size(600, 560); // The size of the game screen
-// var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the player
+var PLAYER_INIT_POS  = new Point(0, 400);     // The initial position of the player
 // var PLAYER_INIT_POS  = new Point(0, 20);     // The initial position of the player
-var PLAYER_INIT_POS = new Point(450, 400); // The initial position of the player
+// var PLAYER_INIT_POS = new Point(450, 400); // The initial position of the player
 
 var MOVE_DISPLACEMENT = 5; // The speed of the player in motion
 var JUMP_SPEED = 15; // The speed of the player jumping
