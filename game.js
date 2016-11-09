@@ -140,7 +140,7 @@ var SCREEN_SIZE = new Size(600, 560); // The size of the game screen
 var PLAYER_INIT_POS = new Point(450, 400); // The initial position of the player
 
 var MOVE_DISPLACEMENT = 5; // The speed of the player in motion
-var JUMP_SPEED = 12; // The speed of the player jumping
+var JUMP_SPEED = 15; // The speed of the player jumping
 var VERTICAL_DISPLACEMENT = 1; // The displacement of vertical speed
 
 var GAME_INTERVAL = 25; // The time interval of running the game
@@ -187,7 +187,7 @@ var gameInterval = null; // The interval
 var zoom = 1.0; // The zoom level of the screen
 var score = 0; // The score of the game
 var gameTimer = null;
-var time = 60;
+var time = 80;
 var level = 1;
 var defaultPlayerName = "";
 var cheatModeOn = false;
@@ -252,7 +252,9 @@ function setupGame(level) {
 
     // create d platforms
     createDisappearingPlatform(80, 380, 60, 20);
-    createDisappearingPlatform(450, 520, 100, 20);
+    createDisappearingPlatform(80, 220, 100, 20);
+    createDisappearingPlatform(260, 80, 60, 20);
+
 
     // Generate monsters according to the level
     // initial: 4 monsters, add 4 each time
@@ -274,7 +276,7 @@ function setupGame(level) {
 
 
     // reset time
-    setTime(60);
+    setTime(80);
 
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
@@ -559,7 +561,7 @@ function createDisappearingPlatform(x, y, w, h) {
     dp.setAttribute("width", w);
     dp.setAttribute("height", h);
     dp.setAttribute("disappear", "false");
-    dp.setAttribute("style", "fill:blue;opacity:1;");
+    dp.setAttribute("style", "fill:#1c9205;opacity:1;");
     svgdoc.getElementById("platforms").appendChild(dp);
 }
 
