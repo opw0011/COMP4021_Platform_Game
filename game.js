@@ -189,10 +189,11 @@ var gameInterval = null; // The interval
 var zoom = 1.0; // The zoom level of the screen
 var score = 0; // The score of the game
 var gameTimer = null;
-var time = 80;
+var time = 60;
 var level = 1;
 var defaultPlayerName = "";
 var cheatModeOn = false;
+var bulletOld = 8;
 // var smonster = null;
 
 //
@@ -278,7 +279,7 @@ function setupGame(level) {
 
 
     // reset time
-    setTime(80);
+    setTime(60);
 
     // Start the game interval
     gameInterval = setInterval("gamePlay()", GAME_INTERVAL);
@@ -784,13 +785,16 @@ function keydown(evt) {
             // Player not die and Unlimited bullets
             cheatModeOn = true;
             svgdoc.getElementById("numBullet").textContent = "Unlimited";
+            bulletOld = numBullet;
             setBullet(-1);
             break;
 
         case "V".charCodeAt(0): // exit cheat mode
-            cheatModeOn = false;
-            setBullet(8);
-            break;
+            if(cheatModeOn == true) {
+              cheatModeOn = false;
+              setBullet(bulletOld);
+              break;
+            }
     }
 }
 

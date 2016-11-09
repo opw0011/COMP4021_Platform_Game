@@ -1,4 +1,3 @@
-
 Test under Firefox 49.0.2
 If it does not work, please use Chrome to open the following url:
 https://opw0011.github.io/COMP4021_Platform_Game/game.html
