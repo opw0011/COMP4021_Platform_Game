@@ -86,9 +86,10 @@ Player.prototype.collideVerticalPlatform = function(position) {
         if (!(Math.abs(this.position.y + PLAYER_SIZE.h - y) <= PLATFORM_VERTICAL_DISPLACEMENT))
             position.x = this.position.x;
         if (intersect(position, PLAYER_SIZE, pos, size)) {
-            if (this.position.y >= y + h) {
+            if (this.position.y >= y + h - 5) {
                 // below the platform
-                position.y = y + h;
+                position.y = y + h ;
+                this.verticalSpeed = -2;
             } else {
                 // place on top of platform
                 position.y = y - PLAYER_SIZE.h;
@@ -96,8 +97,9 @@ Player.prototype.collideVerticalPlatform = function(position) {
                 // console.log(this.position);
                 // console.log(position);
                 // console.log(pos);
+                this.verticalSpeed = -2;
             }
-            this.verticalSpeed = 0;
+
         }
     }
 }

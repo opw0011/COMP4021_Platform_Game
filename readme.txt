@@ -1,15 +1,10 @@
-TODO:
-Transmission Portal
-monster animation
-monster random move
-flip monster when opposite side
 
-IMPROVE:
-sound
-theme
+Test under Firefox 49.0.2
+If it does not work, please use Chrome to open the following url:
+https://opw0011.github.io/COMP4021_Platform_Game/game.html
+(I hosted the game on github)
 
-BUG:
-vertical platform (BUG WHEN JUMP FROM BUTTOM)
+FYI, Please find the score calculation formula below:
 ====================
 Scoring formula
 ====================
